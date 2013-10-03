@@ -4,6 +4,7 @@ var Divshot = require('../lib/Divshot');
 var env = require('../lib/env');
 var userData = require('./fixtures/user_data');
 var User = require('../lib/User');
+var HostedApplication = require('../lib/HostedApplication');
 
 describe('Divshot', function () {
   var divshot;
@@ -27,8 +28,12 @@ describe('Divshot', function () {
     expect(divshot.options.apiHost).to.equal(env.API_HOST);
   });
   
-  it('instantiates the User functionality', function () {
+  it('instantiates user endpoint', function () {
     expect(divshot.user instanceof User).to.be.ok;
+  });
+  
+  it('instantiates apps endpoint', function () {
+    expect(divshot.apps instanceof HostedApplication).to.be.ok;
   });
   
   it('accepts a token and ignores email and password', function (done) {

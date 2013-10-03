@@ -33,6 +33,14 @@ describe('Hosted Application', function () {
     expect(app.path).to.equal('/apps');
   });
   
+  it('gets a list of all the users apps', function (done) {
+    app.getAll(function (err, apps) {
+      expect(err).to.equal(null);
+      expect(apps).to.eql({});
+      done();
+    });
+  });
+  
   it('creates an application', function () {
     var callbackSpy = sinon.spy();
     app.create('test-app', callbackSpy);

@@ -1,10 +1,10 @@
 {
   "name": "divshot",
   "version": "0.0.3",
-  "description": "divshot-api ===========",
+  "description": "Divshot API",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "grunt test"
   },
   "repository": {
     "type": "git",
@@ -14,5 +14,20 @@
   "license": "BSD",
   "bugs": {
     "url": "https://github.com/divshot/divshot-api/issues"
+  },
+  "devDependencies": {
+    "cli-easy": "0.1.0",
+    "vows": "0.6.1",
+    "grunt": "~0.4.1",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-jshint": "~0.6.4",
+    "grunt-mocha-test": "~0.7.0",
+    "chai": "~1.8.0",
+    "proxyquire": "~0.5.1",
+    "sinon": "~1.7.3"
+  },
+  "dependencies": {
+    "lodash.defaults": "~2.2.1",
+    "request": "~2.27.0"
   }
 }

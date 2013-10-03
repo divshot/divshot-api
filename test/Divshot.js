@@ -30,11 +30,6 @@ describe('Divshot', function () {
   it('instantiates the User functionality', function () {
     expect(divshot.user instanceof User).to.be.ok;
   });
-  
-  it('sets the user token if one isn not provided', function () {
-    // expect(divshot.options.token).to.equal('token');
-    // expect(divshot.user.authenticate.called).to.be.ok;
-  });
 });
 
 function createClient () {

@@ -1,6 +1,7 @@
 var expect = require('chai').expect;
 var sinon = require('sinon');
 var stubRequire = require('proxyquire');
+var Endpoint = require('../lib/endpoint');
 var User = stubRequire('../lib/User', {
   request: function (options, callback) {
     callback(null, {
@@ -24,7 +25,11 @@ describe('User', function () {
   });
   
   it('has the api path for auth', function () {
-    expect(user.options.authPath).to.equal('/auth/identity/callback');
+    expect(user.authPath).to.equal('/auth/identity/callback');
+  });
+  
+  it('has an api path for users', function () {
+    expect(user.path).to.equal('/users');
   });
   
   it('parses the token from the api location header', function () {

@@ -30,6 +30,14 @@ describe('Divshot', function () {
   it('instantiates the User functionality', function () {
     expect(divshot.user instanceof User).to.be.ok;
   });
+  
+  it('accepts a token and ignores email and password', function (done) {
+    var d = Divshot.createClient({
+      token: 'token'
+    });
+    
+    done();
+  });
 });
 
 function createClient () {

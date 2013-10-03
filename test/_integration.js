@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'test';
+
 var Divshot = require('../lib/Divshot');
 
 var divshot = Divshot.createClient({
@@ -5,6 +7,10 @@ var divshot = Divshot.createClient({
   password: 'Rad1alp00p!'
 });
 
-divshot.user.authenticate(function (err, token) {
-  console.log(divshot.options.token);
+divshot.app.create('test-app', function () {
+  console.log(arguments);
 });
+
+// divshot.user.authenticate(function (err, token) {
+//   console.log(divshot.options.token);
+// });

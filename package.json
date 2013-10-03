@@ -1,6 +1,6 @@
 {
   "name": "divshot",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "divshot-api ===========",
   "main": "index.js",
   "scripts": {

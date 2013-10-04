@@ -41,6 +41,18 @@ describe('Divshot', function() {
     expect(divshot.apps instanceof Apps).to.be.ok;
   });
   
+  it('can set the Api end point on instantiation', function () {
+    var CUSTOM_HOST = 'http://customhost.com';
+    
+    var d = Divshot.createClient({
+      email: userData.email,
+      password: userData.password,
+      host: CUSTOM_HOST
+    });
+    
+    expect(d.Api.HOST).to.equal(CUSTOM_HOST);
+  });
+  
 });
 
 function createClient () {

@@ -1,25 +1,21 @@
-var http = require('http');
 var expect = require('chai').expect;
 var sinon = require('sinon');
-// var stupRequire = require('proxyquire');
-var Api = require('../lib/Api');
-var PORT = '9387';
+var Mocksy = require('mocksy');
+var Api = require('../lib/api');
+var PORT = 9387;
 var STUB_HOST = 'http://localhost:' + PORT;
+var server = new Mocksy({port: PORT});
+var userData = require('./fixtures/user_data');
 
 Api.HOST = STUB_HOST;
 
 describe('Api base', function() {
-  var server;
-  
   beforeEach(function (done) {
-    createServer(function (_server) {
-      server = _server;
-      done();
-    });
+    server.start(done);
   });
   
   afterEach(function (done) {
-    stopServer(server, done);
+    server.stop(done);
   });
   
   it('sets the api host', function () {
@@ -78,7 +74,7 @@ describe('Api base', function() {
     });
     
     it('calls back with an error if it makes a request to a stopped server', function (done) {
-      server.close(function () {
+      server.stop(function () {
         Api._authenticatedRequest('/path', 'GET', {}, function (err) {
           expect(err).to.be.ok;
           done();
@@ -200,11 +196,11 @@ describe('Api base', function() {
     
     it('creates and item with a payload', function (done) {
       Api.create({
-        email: 'asdf@asdf.com'
+        email: userData.email
       }, function (err, response) {
         expect(response.method).to.equal('POST');
         expect(response.body).to.eql({
-          email: 'asdf@asdf.com'
+          email: userData.email
         });
         
         done();
@@ -214,36 +210,3 @@ describe('Api base', function() {
   });
   
 });
-
-var formidable = require('formidable');
-
-function createServer(callback) {
-  var server = http.createServer(function (req, res) {
-    var form = new formidable.IncomingForm();
-    form.parse(req, function(err, fields, files) {
-     res.writeHead(200, {'Content-Type': 'application/json'});
-       res.end(JSON.stringify({
-         headers: req.headers,
-         url: req.url,
-         method: req.method,
-         body: fields,
-         files: files
-       }));
-    });
-  });
-  
-  server.listen(PORT, function () {
-    callback(server);
-  });
-}
-
-function stopServer(server, callback) {
-  try{
-    server.close(function () {
-      callback();
-    });
-  }
-  catch(e) {
-    callback();
-  }
-}

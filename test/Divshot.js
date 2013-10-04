@@ -1,8 +1,9 @@
 var expect = require('chai').expect;
 var sinon = require('sinon');
-var Divshot = require('../lib/Divshot');
+var Divshot = require('../lib/divshot');
 var userData = require('./fixtures/user_data');
-// var User = require('../lib/User');
+var User = require('../lib/user');
+var Apps = require('../lib/apps');
 
 describe('Divshot', function() {
   var divshot;
@@ -30,6 +31,14 @@ describe('Divshot', function() {
     });
     
     expect(d.options.token).to.equal('token');
+  });
+  
+  it('instantiates a user', function () {
+    expect(divshot.user instanceof User).to.be.ok;
+  });
+  
+  it('instantiates the app endpoint', function () {
+    expect(divshot.apps instanceof Apps).to.be.ok;
   });
   
 });

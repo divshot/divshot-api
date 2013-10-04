@@ -31,7 +31,8 @@ describe('User endpoint', function () {
   });
   
   it('initializes with credentials', function () {
-    expect(user.credentials).to.have.keys(['email', 'password']);
+    expect(user.credentials.email).to.equal(userData.email);
+    expect(user.credentials.password).to.equal(userData.password);
   });
   
   it('parses the user token from the location header', function () {
@@ -49,5 +50,23 @@ describe('User endpoint', function () {
       expect(user._parseTokenFromHeaders.called).to.be.ok;
       done();
     });
+  });
+  
+  it('sets the email and password credentials', function () {
+    user.setCredentials({
+      email: userData.email + 'asdf',
+      password: userData.password + 'asdf'
+    });
+    
+    expect(user.credentials.email).to.equal(userData.email + 'asdf');
+    expect(user.credentials.password).to.equal(userData.password + 'asdf');
+  });
+  
+  it('sets the token credentials', function () {
+    user.setCredentials({
+      token: 'the_token'
+    });
+    
+    expect(user.credentials.token).to.equal('the_token');
   });
 });

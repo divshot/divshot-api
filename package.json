@@ -1,6 +1,6 @@
 {
   "name": "divshot",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Node.js wrapper for the Divshot api.",
   "main": "lib/Divshot.js",
   "scripts": {

@@ -3,12 +3,18 @@ var _defaults = require('lodash.defaults');
 var _extend = require('lodash.assign');
 
 var Api = {
-  extend: function (obj) {
-    _extend(obj, Api);
+  Endpoint: function (path, def) {
+    var construct = def.initialize || function () {};
+    
+    _extend(construct.prototype, Api, {
+      path: '/' + path
+    }, def);
+    
+    return construct;
   },
   
   host: 'http://api.dev.divshot.com:9393',
-  _request: function (path, method, options, callback) {
+  _request: function (path, method, options, callback, shouldNotAuthenticate) {
     if (!Api.user) {
       return callback('user undefined');
     }
@@ -18,13 +24,8 @@ var Api = {
       method: method
     };
     
-    Api.user.authenticate(function (err, token) {
-      requestOptions = _defaults(options, requestOptions, {
-        headers: {
-          authorization: 'Bearer ' + token
-        }
-      });
-      
+    if (shouldNotAuthenticate) {
+      requestOptions = _defaults(options, requestOptions);
       request(requestOptions, function (err, response, body) {
         var data = body;
         
@@ -36,9 +37,31 @@ var Api = {
           callback(err, response, data);
         }
       });
-    });
+    }
+    else{
+      Api.user.authenticate(function (err, token) {
+        requestOptions = _defaults(options, requestOptions, {
+          headers: {
+            authorization: 'Bearer ' + token
+          }
+        });
+        
+        request(requestOptions, function (err, response, body) {
+          var data = body;
+          
+          try {
+            data = JSON.parse(data);
+          }
+          catch (e) {}
+          finally {
+            callback(err, response, data);
+          }
+        });
+      });
+    }
     
   },
+  
   _get: function (options, callback) {
     this._request(this.path, 'GET', options, callback);
   },

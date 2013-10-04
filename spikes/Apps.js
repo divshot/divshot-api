@@ -1,9 +1,5 @@
 var Api = require('./Api');
 
-var Apps = function () {
-  this.path = '/apps';
-};
-
-Api.extend(Apps.prototype);
+var Apps = Api.Endpoint('apps', {});
 
 module.exports = Apps;

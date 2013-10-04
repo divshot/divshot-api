@@ -1,6 +1,6 @@
 var Api = require('./Api');
 
-var User = Api.Endpoint('users', {
+var User = Api.endpoint('users', {
   initialize: function (credentials) {
     this.authPath = '/auth/identity/callback';
     this.credentials = credentials

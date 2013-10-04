@@ -24,7 +24,8 @@
     "grunt-mocha-test": "~0.7.0",
     "chai": "~1.8.0",
     "proxyquire": "~0.5.1",
-    "sinon": "~1.7.3"
+    "sinon": "~1.7.3",
+    "formidable": "~1.0.14"
   },
   "dependencies": {
     "lodash.defaults": "~2.2.1",

@@ -1,5 +1,5 @@
 var Api = require('./Api');
 
-var Apps = Api.Endpoint('apps', {});
+var Apps = Api.endpoint('apps', {});
 
 module.exports = Apps;

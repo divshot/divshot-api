@@ -3,7 +3,9 @@ var _defaults = require('lodash.defaults');
 var _extend = require('lodash.assign');
 
 var Api = {
-  Endpoint: function (path, def) {
+  HOST: 'http://api.dev.divshot.com:9393',
+  
+  endpoint: function (path, def) {
     var construct = def.initialize || function () {};
     
     _extend(construct.prototype, Api, {
@@ -13,14 +15,13 @@ var Api = {
     return construct;
   },
   
-  host: 'http://api.dev.divshot.com:9393',
   _request: function (path, method, options, callback, shouldNotAuthenticate) {
     if (!Api.user) {
       return callback('user undefined');
     }
     
     var requestOptions = {
-      url: Api.host + path,
+      url: Api.HOST + path,
       method: method
     };
     

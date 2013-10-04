@@ -8,12 +8,12 @@ var User = stubRequire('../lib/User', {
       headers: {
         location: 'asdf#token=my_token'
       }
-    }, 'body');
+    }, JSON.stringify({key: 'value'}));
   }
 });
 var HostedApplication = stubRequire('../lib/HostedApplication', {
   request: function (options, callback) {
-    callback(null, {}, {});
+    callback(null, {}, JSON.stringify({key: 'value'}));
   }
 });
 
@@ -36,7 +36,9 @@ describe('Hosted Application', function () {
   it('gets a list of all the users apps', function (done) {
     app.getAll(function (err, apps) {
       expect(err).to.equal(null);
-      expect(apps).to.eql({});
+      expect(apps).to.eql({
+        key: 'value'
+      });
       done();
     });
   });

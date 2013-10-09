@@ -22,7 +22,7 @@ describe('Api base', function() {
     expect(Api.HOST).to.be.ok;
   });
   
-  describe('endpoint()', function() {
+  describe('#endpoint()', function() {
     var Endpoint;
     var intializer = function (asdf) {};
     
@@ -54,7 +54,7 @@ describe('Api base', function() {
     });
   });
   
-  describe('_request()', function () {
+  describe('#_request()', function () {
     var reqBody, reqResponse, reqErr;
     
     beforeEach(function (done) {
@@ -83,7 +83,7 @@ describe('Api base', function() {
     });
   });
   
-  describe('_authenticatedRequest()', function () {
+  describe('#_authenticatedRequest()', function () {
     var reqBody, reqResponse, reqErr;
     
     beforeEach(function (done) {

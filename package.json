@@ -30,6 +30,9 @@
   "dependencies": {
     "lodash.defaults": "~2.2.1",
     "request": "~2.27.0",
-    "lodash.assign": "~2.2.1"
+    "lodash.assign": "~2.2.1",
+    "narrator": "~0.4.1",
+    "form-data": "~0.1.2",
+    "async": "~0.2.9"
   }
 }

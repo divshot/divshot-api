@@ -12,6 +12,16 @@ npm install divshot --save
 
 Refer to the [Narrator](https://github.com/scottcorgan/narrator) api for a more in depth understanding of all available methods.
 
+**CommonJS (Node/Browserify)**
+```javascript
+var Divshot = require('divshot');
+```
+
+**Standalone**
+```
+<script src="/path/to/divshot.standalone.min.js"></div>
+```
+
 ###Instantiate
 
 ```javascript

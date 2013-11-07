@@ -1,0 +1,18 @@
+<html>
+  <head>
+    <script src="/dist/divshot.js"></script>
+    
+    <script>
+      var divshot = Divshot.createClient({
+        token: 'BI2RccPasPhVHxe-DwHTW1eZD9cfNWMc4wUzc4qG'
+      });
+
+      divshot.apps.id('scottcorgan').get(function (err, app) {
+        console.log(app);
+    });
+    </script>
+  </head>
+  <body>
+    hey
+  </body>
+</html>

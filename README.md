@@ -1,6 +1,6 @@
 # Divshot Api
 
-Wrapper for the Divshot API
+Wrapper for the Divshot API. 
 
 ## Install
 
@@ -10,17 +10,43 @@ npm install divshot --save
 
 ## Usage
 
-####Instantiate
+Refer to the [Narrator](https://github.com/scottcorgan/narrator) api for a more in depth understanding of all available methods.
+
+###Instantiate
 
 ```javascript
 var api = Divshot.createClient({
+  email: 'someone@divshot.com',
+  password: 'somepassword123!',
+  
+  // OR
+  
   token: 'your divshot access token'
 });
 ```
 
-####Apps
+###User
 
+By default, the ` authenticate ` method will be called on each request as a pre hook. If a token is provided, this does not create another http request.
+
+```javascript
+api.user.authenticate(function (err, token) {
+
+});
+
+api.user.setCredentials({
+  email: 'someone@divshot.com',
+  password: 'somepassword123!',
+  
+  // OR
+  
+  token: 'some_really_long_access_token_from_divshot'
+});
 ```
+
+###Apps
+
+```javascript
 // List apps
 api.apps.list(function (err, apps) {
   
@@ -31,8 +57,11 @@ var app = api.apps.id('app name');
 app.get(function (err, app) {
   
 });
+```
 
-// App builds
+### Builds
+
+```javascript
 app.builds.list(function (err, builds) {
   
 });
@@ -48,8 +77,11 @@ app.builds.id('build id').finalize(function (err, response) {
 app.builds.id('build id').release('production', function (err, response) {
   
 });
+```
 
-// App releases
+###Releases
+
+```javascript
 app.releases.list(function (err, releases) {
   
 });
@@ -66,8 +98,11 @@ app.releases.env('production').promote('staging', function (err, callback) {
   // Here, "staging" is the from environment
   // and "production" is the to-environment
 });
+```
 
-// App domains
+###Domains
+
+```javascript
 app.domains.add('www.domain.com', function (err, response) {
   
 });

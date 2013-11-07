@@ -1,6 +1,6 @@
 {
   "name": "divshot",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Wrapper for the Divshot api",
   "main": "lib/Divshot.js",
   "scripts": {
@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "lodash.defaults": "~2.2.1",
-    "narrator": "0.5.1",
+    "narrator": "0.5.5",
     "form-data": "~0.1.2",
     "async": "~0.2.9"
   }

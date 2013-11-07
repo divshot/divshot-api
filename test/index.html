@@ -9,7 +9,11 @@
 
       divshot.apps.id('scottcorgan').get(function (err, app) {
         console.log(app);
-    });
+      });
+      
+      divshot.apps.list(function (err, apps) {
+        console.log(apps);
+      });
     </script>
   </head>
   <body>

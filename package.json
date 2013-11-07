@@ -1,7 +1,7 @@
 {
   "name": "divshot",
-  "version": "0.2.8",
-  "description": "Node.js wrapper for the Divshot api.",
+  "version": "0.3.0",
+  "description": "Wrapper for the Divshot api",
   "main": "lib/Divshot.js",
   "scripts": {
     "test": "grunt test"
@@ -19,18 +19,17 @@
     "cli-easy": "0.1.0",
     "vows": "0.6.1",
     "grunt": "~0.4.1",
-    "grunt-contrib-watch": "~0.5.3",
-    "grunt-contrib-jshint": "~0.6.4",
-    "grunt-mocha-test": "~0.7.0",
     "chai": "~1.8.0",
     "proxyquire": "~0.5.1",
     "sinon": "~1.7.3",
-    "mocksy": "~0.1.4"
+    "mocksy": "~0.1.4",
+    "grunt-contrib-uglify": "~0.2.5",
+    "browserify": "~2.35.1",
+    "grunt-browserify": "~1.2.11"
   },
   "dependencies": {
     "lodash.defaults": "~2.2.1",
-    "lodash.assign": "~2.2.1",
-    "narrator": "~0.4.1",
+    "narrator": "0.5.1",
     "form-data": "~0.1.2",
     "async": "~0.2.9"
   }

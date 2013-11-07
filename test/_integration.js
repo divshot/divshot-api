@@ -1,15 +1,15 @@
 // process.env.NODE_ENV = 'test';
 
-// var Divshot = require('../lib/Divshot');
+var Divshot = require('../lib/Divshot');
 
-// var divshot = Divshot.createClient({
-//   email: 'scott@divshot.com',
-//   password: 'Rad1alp00p!'
-// });
+var divshot = Divshot.createClient({
+  email: 'scottcorgan@gmail.com',
+  password: 'Rad1alp00p!'
+});
 
-// divshot.apps.getAll(function (err, apps) {
-//   console.log(apps);
-// });
+divshot.apps.list(function (err, apps) {
+  console.log(apps);
+});
 
 // divshot.apps.create({
 //   name: 'another-app'

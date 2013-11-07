@@ -1,64 +1,29 @@
 module.exports = function(grunt) {
-  
-  // Project configuration.
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     
-    // Lint it!
-    jshint: {
-      options: {
-        jshintrc: '.jshintrc'
-      },
-      all: [
-        '*.js',
-        'lib/**/*.js',
-        'test/**/*.js'
-      ]
-    },
-    
-    // Test runner
-    mochaTest: {
-      tests: {
-        options: {
-          reporter: 'spec',
-          require: ['./test/_test_config']
+    browserify: {
+      standalone: {
+        files: {
+          'dist/divshot.js': ['lib/Divshot.js'],
         },
-        src: [__dirname + '/test/**/*.js']
+        options: {
+          standalone: 'Divshot'
+        }
       }
     },
     
-    // Watch
-    watch: {
-      test: {
-        files: ['*.js', 'lib/**/*.js', 'test/**/*.js'],
-        tasks: ['test']
-      },
-      jshint: {
-        files: ['*.js', 'lib/**/*.js', 'test/**/*.js'],
-        tasks: ['jshint']
+    uglify: {
+      standalone: {
+        src: 'dist/divshot.js',
+        dest: 'dist/divshot.min.js'
       }
     }
   });
 
-  // Load the plugin that provides the "uglify" task.
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-mocha-test');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-browserify');
 
-  //////////////////
-  // TODO: NEED TO REGISTER BUILD PROCESS TASK
-  //////////////////
-
-  // Run tests only
-  grunt.registerTask('test', [
-    'jshint',
-    'mochaTest'
-  ]);
-  
-  // Tests with a watcher
-  grunt.registerTask('test:watch', [
-    'jshint',
-    'mochaTest',
-    'watch:test'
-  ]);
+  grunt.registerTask('build', ['browserify', 'uglify']);
 };

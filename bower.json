@@ -1,0 +1,23 @@
+{
+  "name": "divshot",
+  "version": "0.3.0",
+  "homepage": "https://github.com/divshot/divshot-api",
+  "authors": [
+    "Scott Corgan <scottcorgan@gmail.com>"
+  ],
+  "description": "Wrapper for the Divshot api",
+  "main": "dist/divshot.min.js",
+  "keywords": [
+    "divshot",
+    "api",
+    "wrapper"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "lib"
+  ]
+}

@@ -4,16 +4,20 @@
     
     <script>
       var divshot = Divshot.createClient({
-        token: 'BI2RccPasPhVHxe-DwHTW1eZD9cfNWMc4wUzc4qG'
+        
       });
 
-      divshot.apps.id('scottcorgan').get(function (err, app) {
-        console.log(app);
+      divshot.apps.id('scottcorgan').get(function (err, apps) {
+        // console.log(apps);
+      }).then(function (apps) {
+        console.log(apps);
+      }, function (err) {
+        console.log(err);
       });
       
-      divshot.apps.list(function (err, apps) {
-        console.log(apps);
-      });
+      // divshot.apps.list(function (err, apps) {
+      //   console.log(apps);
+      // });
     </script>
   </head>
   <body>

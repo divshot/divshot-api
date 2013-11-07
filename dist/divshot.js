@@ -62,18 +62,18 @@ module.exports = function (api, divshot) {
         id: function (id) {
           return this.one(id, {
             finalize: function (callback) {
-              this.http.request(this.url() + '/finalize', 'PUT', function (err, response, body) {
-                callback(null, response);
+              return this.http.request(this.url() + '/finalize', 'PUT', function (err, response, body) {
+                if (callback) callback(null, response);
               });
             },
             
             release: function (environment, callback) {
-              this.http.request(app.url() + '/releases/' + environment, 'POST', {
+              return this.http.request(app.url() + '/releases/' + environment, 'POST', {
                 form: {
                   build: this.options.id
                 }
               }, function (err, response, body) {
-                callback(err, response);
+                if (callback) callback(err, response);
               });
             }
           });
@@ -86,18 +86,18 @@ module.exports = function (api, divshot) {
         env: function (id) {
           return this.one(id, {
             rollback: function (callback) {
-              this.http.request(this.url() + '/rollback', 'POST', function (err, response, body) {
-                callback(err, response);
+              return this.http.request(this.url() + '/rollback', 'POST', function (err, response, body) {
+                if (callback) callback(err, response);
               });
             },
             
             promote: function (environment, callback) {
-              this.http.request(this.url(), 'POST', {
+              return this.http.request(this.url(), 'POST', {
                 form: {
                   environment: environment
                 }
               }, function (err, response, body) {
-                callback(err, body)
+                if (callback) callback(err, body)
               });
             }
           });
@@ -112,8 +112,8 @@ module.exports = function (api, divshot) {
       
       app.domains = app.endpoint('domains', {
         _domainRequest: function (domain, method, callback) {
-          this.http.request(this.url() + '/' + domain, method, function (err, response, body) {
-            callback(err, response);
+          return this.http.request(this.url() + '/' + domain, method, function (err, response, body) {
+            if (callback) callback(err, response);
           });
         },
         
@@ -149,12 +149,12 @@ module.exports = function (api, divshot) {
     lookup: function (host, callback) {
       var url = this.url() + '/lookup';
       
-      this.http.request(url, 'GET', {
+      return this.http.request(url, 'GET', {
         form: {
           host: host
         }
       }, function (err, response, body) {
-        callback(err, body);
+        if (callback) callback(err, body);
       });
     }
   });
@@ -185,7 +185,7 @@ module.exports = function (api, divshot, credentials) {
         return callback(null, this.credentials.token);
       }
       
-      this.http._http(this.options.host + '/token', 'POST', {
+      return this.http._http(this.options.host + '/token', 'POST', {
         form: {
           username: this.credentials.email,
           password: this.credentials.password,
@@ -195,13 +195,15 @@ module.exports = function (api, divshot, credentials) {
           Authorization: 'Basic NTI1NTc4YTM0MjFhYTk4MTU1MDAwMDA0Og==' // TODO: move this elsewhere
         }
       }, function (err, response, body) {
-        if (err || body.status) {
+        if (callback && err || body.status) {
           err = err || body.error;
           return callback(err);
         }
         
-        self.credentials.token = body.access_token;
-        callback(err, self.credentials.token);
+        if (callback) {
+          self.credentials.token = body.access_token;
+          callback(err, self.credentials.token);
+        }
       });
     },
     
@@ -279,8 +281,8 @@ module.exports = function (options, callback) {
   options.data = options.form;
   options.type = options.type || 'json';
   
-  options.error = function (err) {
-    callback(err);
+  options.error = function (response) {
+    callback(response);
   };
   
   options.success = function (response) {
@@ -291,7 +293,7 @@ module.exports = function (options, callback) {
   
   return request(options);
 };
-},{"reqwest":14}],8:[function(require,module,exports){
+},{"reqwest":17}],8:[function(require,module,exports){
 var defaults = require('./helpers/defaults');
 var extend = require('extend');
 var urljoin = require('url-join');
@@ -363,8 +365,8 @@ Endpoint.prototype.one = function (id, userDefined) {
 };
 
 Endpoint.prototype.list = function (callback) {
-  this.http.request(this.url(), 'GET', function (err, response, list) {
-    callback(err, list);
+  return this.http.request(this.url(), 'GET', function (err, response, list) {
+    if (callback) callback(err, list);
   });
 };
 
@@ -373,8 +375,8 @@ Endpoint.prototype.create = function (payload, callback) {
     form: payload
   };
   
-  this.http.request(this.url(), 'POST', requestBody, function (err, response, body) {
-    callback(err, body);
+  return this.http.request(this.url(), 'POST', requestBody, function (err, response, body) {
+    if (callback) callback(err, body);
   });
 };
 
@@ -383,7 +385,7 @@ Endpoint.prototype.getEndpoint = function (path, id) {
   return this.options._endpoints[pathKey];
 };
 
-},{"./entity":9,"./helpers/defaults":10,"./http":11,"extend":13,"url-join":15}],9:[function(require,module,exports){
+},{"./entity":9,"./helpers/defaults":10,"./http":11,"extend":13,"url-join":18}],9:[function(require,module,exports){
 var Http = require('./http');
 var urljoin = require('url-join');
 var defaults = require('./helpers/defaults');
@@ -441,8 +443,8 @@ Entity.prototype.url = function () {
 };
 
 Entity.prototype.get = function (callback) {
-  this.http.request(this.url(), 'GET', function (err, response, data) {
-    callback(err, data);
+  return this.http.request(this.url(), 'GET', function (err, response, data) {
+    if (callback) callback(err, data);
   });
 };
 
@@ -451,14 +453,14 @@ Entity.prototype.update = function (payload, callback) {
     form: payload
   };
   
-  this.http.request(this.url(), 'PUT', requestBody, function (err, response, body) {
-    callback(err, body);
+  return this.http.request(this.url(), 'PUT', requestBody, function (err, response, body) {
+    if (callback) callback(err, body);
   });
 };
 
 Entity.prototype.remove = function (callback) {
-  this.http.request(this.url(), 'DELETE', function (err, response, body) {
-    callback(err, body);
+  return this.http.request(this.url(), 'DELETE', function (err, response, body) {
+    if (callback) callback(err, body);
   });
 };
 
@@ -467,12 +469,13 @@ Entity.prototype.getEndpoint = function (path, id) {
   return this.options._endpoints[pathKey];
 };
 
-},{"./helpers/defaults":10,"./http":11,"./narrator":12,"extend":13,"url-join":15}],10:[function(require,module,exports){
+},{"./helpers/defaults":10,"./http":11,"./narrator":12,"extend":13,"url-join":18}],10:[function(require,module,exports){
 module.exports=require(4)
 },{}],11:[function(require,module,exports){
 var process=require("__browserify_process");var extend = require('extend');
 var defaults = require('./helpers/defaults');
 var request = require('request');
+var Promise = require('promise');
 
 var Http = module.exports = function (options) {
   this.options = {
@@ -514,6 +517,10 @@ Http.prototype._http = function (path, method, options, callback) {
     options = {};
   }
   
+  if (typeof callback === 'undefined') {
+    callback = function () {};
+  }
+  
   var requestOptions = {
     url: path,
     method: method
@@ -521,8 +528,19 @@ Http.prototype._http = function (path, method, options, callback) {
   
   requestOptions = defaults(options, requestOptions);
   
-  request(requestOptions, function (err, response, body) {
-    callback(err, response, self._parseJSON(body));
+  return new Promise(function (resolve, reject) {
+    request(requestOptions, function (err, response, body) {
+      var responseBody = self._parseJSON(body);
+      
+      if (err) {
+        reject(err);
+      }
+      else{
+        resolve(responseBody);
+      }
+      
+      callback(err, response, responseBody);
+    });
   });
 };
 
@@ -546,16 +564,19 @@ Http.prototype.request = function (path, method, options, callback) {
     method: method
   });
   
-  // TODO: pass current api context (api, users, etc)
-  process.nextTick(function () {
-    var preHook = (self.options.hooks && self.options.hooks.pre) ? self.options.hooks.pre : function (next) { next(); };
+  return new Promise(function (resolve, reject) {
     
-    preHook.call(self.options.context, function () {
-      self._http(path, method, httpOptions, callback);
+    // TODO: pass current api context (api, users, etc)
+    process.nextTick(function () {
+      var preHook = (self.options.hooks && self.options.hooks.pre) ? self.options.hooks.pre : function (next) { next(); };
+      
+      preHook.call(self.options.context, function () {
+        self._http(path, method, httpOptions, callback).then(resolve, reject);
+      });
     });
   });
 };
-},{"./helpers/defaults":10,"__browserify_process":6,"extend":13,"request":7}],12:[function(require,module,exports){
+},{"./helpers/defaults":10,"__browserify_process":6,"extend":13,"promise":15,"request":7}],12:[function(require,module,exports){
 var extend = require('extend');
 var urljoin = require('url-join');
 
@@ -587,7 +608,7 @@ Narrator.prototype.endpoint = function (path, userDefined) {
   return this._endpoints[pathKey];
 };
 
-},{"./endpoint":8,"extend":13,"url-join":15}],13:[function(require,module,exports){
+},{"./endpoint":8,"extend":13,"url-join":18}],13:[function(require,module,exports){
 var hasOwn = Object.prototype.hasOwnProperty;
 var toString = Object.prototype.toString;
 
@@ -668,6 +689,217 @@ module.exports = function extend() {
 };
 
 },{}],14:[function(require,module,exports){
+'use strict'
+
+var nextTick = require('./lib/next-tick')
+
+module.exports = Promise
+function Promise(fn) {
+  if (!(this instanceof Promise)) return new Promise(fn)
+  if (typeof fn !== 'function') throw new TypeError('not a function')
+  var state = null
+  var delegating = false
+  var value = null
+  var deferreds = []
+  var self = this
+
+  this.then = function(onFulfilled, onRejected) {
+    return new Promise(function(resolve, reject) {
+      handle(new Handler(onFulfilled, onRejected, resolve, reject))
+    })
+  }
+
+  function handle(deferred) {
+    if (state === null) {
+      deferreds.push(deferred)
+      return
+    }
+    nextTick(function() {
+      var cb = state ? deferred.onFulfilled : deferred.onRejected
+      if (cb === null) {
+        (state ? deferred.resolve : deferred.reject)(value)
+        return
+      }
+      var ret
+      try {
+        ret = cb(value)
+      }
+      catch (e) {
+        deferred.reject(e)
+        return
+      }
+      deferred.resolve(ret)
+    })
+  }
+
+  function resolve(newValue) {
+    if (delegating)
+      return
+    resolve_(newValue)
+  }
+
+  function resolve_(newValue) {
+    if (state !== null)
+      return
+    try { //Promise Resolution Procedure: https://github.com/promises-aplus/promises-spec#the-promise-resolution-procedure
+      if (newValue === self) throw new TypeError('A promise cannot be resolved with itself.')
+      if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
+        var then = newValue.then
+        if (typeof then === 'function') {
+          delegating = true
+          then.call(newValue, resolve_, reject_)
+          return
+        }
+      }
+      state = true
+      value = newValue
+      finale()
+    } catch (e) { reject_(e) }
+  }
+
+  function reject(newValue) {
+    if (delegating)
+      return
+    reject_(newValue)
+  }
+
+  function reject_(newValue) {
+    if (state !== null)
+      return
+    state = false
+    value = newValue
+    finale()
+  }
+
+  function finale() {
+    for (var i = 0, len = deferreds.length; i < len; i++)
+      handle(deferreds[i])
+    deferreds = null
+  }
+
+  try { fn(resolve, reject) }
+  catch(e) { reject(e) }
+}
+
+
+function Handler(onFulfilled, onRejected, resolve, reject){
+  this.onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : null
+  this.onRejected = typeof onRejected === 'function' ? onRejected : null
+  this.resolve = resolve
+  this.reject = reject
+}
+
+},{"./lib/next-tick":16}],15:[function(require,module,exports){
+'use strict'
+
+//This file contains then/promise specific extensions to the core promise API
+
+var Promise = require('./core.js')
+var nextTick = require('./lib/next-tick')
+
+module.exports = Promise
+
+/* Static Functions */
+
+Promise.from = function (value) {
+  if (value instanceof Promise) return value
+  return new Promise(function (resolve) { resolve(value) })
+}
+Promise.denodeify = function (fn) {
+  return function () {
+    var self = this
+    var args = Array.prototype.slice.call(arguments)
+    return new Promise(function (resolve, reject) {
+      args.push(function (err, res) {
+        if (err) reject(err)
+        else resolve(res)
+      })
+      fn.apply(self, args)
+    })
+  }
+}
+Promise.nodeify = function (fn) {
+  return function () {
+    var args = Array.prototype.slice.call(arguments)
+    var callback = typeof args[args.length - 1] === 'function' ? args.pop() : null
+    try {
+      return fn.apply(this, arguments).nodeify(callback)
+    } catch (ex) {
+      if (callback == null) {
+        return new Promise(function (resolve, reject) { reject(ex) })
+      } else {
+        nextTick(function () {
+          callback(ex)
+        })
+      }
+    }
+  }
+}
+
+Promise.all = function () {
+  var args = Array.prototype.slice.call(arguments.length === 1 && Array.isArray(arguments[0]) ? arguments[0] : arguments)
+
+  return new Promise(function (resolve, reject) {
+    if (args.length === 0) return resolve([])
+    var remaining = args.length
+    function res(i, val) {
+      try {
+        if (val && (typeof val === 'object' || typeof val === 'function')) {
+          var then = val.then
+          if (typeof then === 'function') {
+            then.call(val, function (val) { res(i, val) }, reject)
+            return
+          }
+        }
+        args[i] = val
+        if (--remaining === 0) {
+          resolve(args);
+        }
+      } catch (ex) {
+        reject(ex)
+      }
+    }
+    for (var i = 0; i < args.length; i++) {
+      res(i, args[i])
+    }
+  })
+}
+
+/* Prototype Methods */
+
+Promise.prototype.done = function (onFulfilled, onRejected) {
+  var self = arguments.length ? this.then.apply(this, arguments) : this
+  self.then(null, function (err) {
+    nextTick(function () {
+      throw err
+    })
+  })
+}
+Promise.prototype.nodeify = function (callback) {
+  if (callback == null) return this
+
+  this.then(function (value) {
+    nextTick(function () {
+      callback(null, value)
+    })
+  }, function (err) {
+    nextTick(function () {
+      callback(err)
+    })
+  })
+}
+},{"./core.js":14,"./lib/next-tick":16}],16:[function(require,module,exports){
+var process=require("__browserify_process");'use strict'
+
+if (typeof setImmediate === 'function') { // IE >= 10 & node.js >= 0.10
+  module.exports = function(fn){ setImmediate(fn) }
+} else if (typeof process !== 'undefined' && process && typeof process.nextTick === 'function') { // node.js before 0.10
+  module.exports = function(fn){ process.nextTick(fn) }
+} else {
+  module.exports = function(fn){ setTimeout(fn, 0) }
+}
+
+},{"__browserify_process":6}],17:[function(require,module,exports){
 /*! version: 0.9.3 */
 /*!
   * Reqwest! A general purpose XHR connection manager
@@ -1266,7 +1498,7 @@ module.exports = function extend() {
   return reqwest
 });
 
-},{}],15:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 function normalize (str) {
   return str
           .replace(/[\/]+/g, '/')

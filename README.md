@@ -35,6 +35,24 @@ var api = Divshot.createClient({
 });
 ```
 
+###Angular Module
+
+Located at ` /dist/divshot.angular.js `
+
+```javascript
+angular.module('myApp', ['divshot'])
+  .config(function (divshotProvider) {
+    divshotProvider.configure({
+      token: 'divshot_api_access_token'
+    });
+  }).
+  controller('SomeCtrl', function ($scope, divshot) {
+    
+    $scope.apps = divshot.apps.list();
+    
+  });
+```
+
 ###User
 
 By default, the ` authenticate ` method will be called on each request as a pre hook. If a token is provided, this does not create another http request.

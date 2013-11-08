@@ -288,7 +288,7 @@ module.exports = function (options, callback) {
   options.success = function (response) {
     var body = response.self || response;
     
-    callback(null, response, body);
+    callback(null, body, body);
   };
   
   return request(options);
@@ -358,7 +358,8 @@ Endpoint.prototype.one = function (id, userDefined) {
     path: urljoin('/', this.options.path),
     headers: this.options.headers,
     userDefined: userDefined || {},
-    id: id
+    id: id,
+    api: this.options.api
   });
   
   return entity;
@@ -434,7 +435,6 @@ Entity.prototype.endpoint = function (path, customMethods) {
     headers: this.options.headers,
     _endpoints: this.options._endpoints
   });
-  
   return api.endpoint(path, customMethods);
 };
 
@@ -485,6 +485,20 @@ var Http = module.exports = function (options) {
   };
   
   extend(this.options, options);
+  
+  // Be sure we have a promise
+  if (hasPromise(this)) {
+    this.promise = this.options.context.options.api.promise;
+  }
+  else {
+    this.promise = function (callback) {
+      return new Promise(callback);
+    };
+  }
+  
+  function hasPromise (obj) {
+    return obj.options.context.options && obj.options.context.options.api && obj.options.context.options.api.promise;
+  }
 };
 
 Http.prototype.setHeaders = function (headers) {
@@ -527,8 +541,7 @@ Http.prototype._http = function (path, method, options, callback) {
   };
   
   requestOptions = defaults(options, requestOptions);
-  
-  return new Promise(function (resolve, reject) {
+  return this.promise(function (resolve, reject) {
     request(requestOptions, function (err, response, body) {
       var responseBody = self._parseJSON(body);
       
@@ -564,8 +577,7 @@ Http.prototype.request = function (path, method, options, callback) {
     method: method
   });
   
-  return new Promise(function (resolve, reject) {
-    
+  return this.promise(function (resolve, reject) {
     // TODO: pass current api context (api, users, etc)
     process.nextTick(function () {
       var preHook = (self.options.hooks && self.options.hooks.pre) ? self.options.hooks.pre : function (next) { next(); };
@@ -579,8 +591,11 @@ Http.prototype.request = function (path, method, options, callback) {
 },{"./helpers/defaults":10,"__browserify_process":6,"extend":13,"promise":15,"request":7}],12:[function(require,module,exports){
 var extend = require('extend');
 var urljoin = require('url-join');
+var Promise = require('promise');
 
 var Narrator = module.exports = function (options) {
+  options = options || {};
+  
   this._endpoints = {};
   this.host = '/';
   
@@ -599,7 +614,8 @@ Narrator.prototype.endpoint = function (path, userDefined) {
       path: urljoin('/', path),
       headers: this.headers,
       userDefined: userDefined || {},
-      _endpoints: this._endpoints
+      _endpoints: this._endpoints,
+      api: this
     });
     
     this._endpoints[pathKey] = endpoint;
@@ -608,7 +624,7 @@ Narrator.prototype.endpoint = function (path, userDefined) {
   return this._endpoints[pathKey];
 };
 
-},{"./endpoint":8,"extend":13,"url-join":18}],13:[function(require,module,exports){
+},{"./endpoint":8,"extend":13,"promise":15,"url-join":18}],13:[function(require,module,exports){
 var hasOwn = Object.prototype.hasOwnProperty;
 var toString = Object.prototype.toString;
 

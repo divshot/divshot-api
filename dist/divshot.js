@@ -523,6 +523,12 @@ Http.prototype._parseJSON = function (data) {
   }
 };
 
+Http.prototype._promiseWrap = function (callback) {
+  return new Promise(callback);
+};
+
+Http.prototype._request = request;
+
 Http.prototype._http = function (path, method, options, callback) {
   var self = this;
   
@@ -541,8 +547,8 @@ Http.prototype._http = function (path, method, options, callback) {
   };
   
   requestOptions = defaults(options, requestOptions);
-  return this.promise(function (resolve, reject) {
-    request(requestOptions, function (err, response, body) {
+  return this._promiseWrap(function (resolve, reject) {
+    self._request(requestOptions, function (err, response, body) {
       var responseBody = self._parseJSON(body);
       
       if (err) {
@@ -577,7 +583,7 @@ Http.prototype.request = function (path, method, options, callback) {
     method: method
   });
   
-  return this.promise(function (resolve, reject) {
+  return this._promiseWrap(function (resolve, reject) {
     // TODO: pass current api context (api, users, etc)
     process.nextTick(function () {
       var preHook = (self.options.hooks && self.options.hooks.pre) ? self.options.hooks.pre : function (next) { next(); };
@@ -602,6 +608,8 @@ var Narrator = module.exports = function (options) {
   extend(this, options);
 };
 
+Narrator.Http = require('./http');
+
 // Placed here because of circular dependency stuff
 var Endpoint = require('./endpoint');
 
@@ -624,7 +632,7 @@ Narrator.prototype.endpoint = function (path, userDefined) {
   return this._endpoints[pathKey];
 };
 
-},{"./endpoint":8,"extend":13,"promise":15,"url-join":18}],13:[function(require,module,exports){
+},{"./endpoint":8,"./http":11,"extend":13,"promise":15,"url-join":18}],13:[function(require,module,exports){
 var hasOwn = Object.prototype.hasOwnProperty;
 var toString = Object.prototype.toString;
 

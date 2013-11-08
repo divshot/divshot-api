@@ -141,4 +141,10 @@ app.domains.remove('www.domain.com', function (err, response) {
 
 ```
 
+## Build
+
+```
+grunt build
+```
+
 

@@ -32,11 +32,12 @@ Divshot.createClient = function (options) {
 
 Divshot.prototype.setTokenHeader = function (token, context) {
   var context = context || this._api;
-  context.options.headers.authorization = 'Bearer ' + token;
+  context.headers.authorization = 'Bearer ' + token;
 };
 
 Divshot.prototype.setToken = function (token) {
   this.options.token = token;
+  this.setTokenHeader(token);
 };
 
 module.exports = Divshot;
@@ -321,7 +322,7 @@ module.exports = function (Http, $http) {
         callback(err);
       });
   };
-}
+};
 },{}],10:[function(require,module,exports){
 module.exports = function (Http, $rootScope, $q) {
   Http.prototype._promiseWrap = function (callback) {

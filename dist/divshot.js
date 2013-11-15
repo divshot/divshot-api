@@ -33,11 +33,12 @@ Divshot.createClient = function (options) {
 
 Divshot.prototype.setTokenHeader = function (token, context) {
   var context = context || this._api;
-  context.options.headers.authorization = 'Bearer ' + token;
+  context.headers.authorization = 'Bearer ' + token;
 };
 
 Divshot.prototype.setToken = function (token) {
   this.options.token = token;
+  this.setTokenHeader(token);
 };
 
 module.exports = Divshot;

@@ -32,12 +32,11 @@ Divshot.createClient = function (options) {
 
 Divshot.prototype.setTokenHeader = function (token, context) {
   var context = context || this._api;
-  context.headers.authorization = 'Bearer ' + token;
+  context.options.headers.authorization = 'Bearer ' + token;
 };
 
 Divshot.prototype.setToken = function (token) {
   this.options.token = token;
-  this.setTokenHeader(token);
 };
 
 module.exports = Divshot;
@@ -125,6 +124,23 @@ module.exports = function (api, divshot) {
           this._domainRequest(domain, 'DELETE', callback);
         }
       });
+      
+      // PUT /apps/:app_id/env/:env/config
+      app.env = function (env) {
+        return app.endpoint('env').one(env, {
+          config: function (configData, callback) {
+            var url = this.url() + '/config';
+            
+            this.http.request(url, 'PUT', {
+              form: {
+                config: configData
+              }
+            }, function (err, response, body) {
+              callback(err, response);
+            });
+          }
+        });
+      };
       
       return app;
     }

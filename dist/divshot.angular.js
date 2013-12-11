@@ -4,6 +4,7 @@ var Narrator = require('narrator');
 var user = require('./user');
 var apps = require('./apps');
 var builds = require('./builds');
+var releases = require('./releases');
 
 var Divshot = function (options) {
   this.defaults = {};
@@ -24,6 +25,7 @@ var Divshot = function (options) {
   this.user = user(this._api, this, options);
   this.apps = apps(this._api, this);
   this.builds = builds(this._api, this);
+  this.releases = releases(this._api, this);
 };
 
 Divshot.createClient = function (options) {
@@ -41,7 +43,7 @@ Divshot.prototype.setToken = function (token) {
 
 module.exports = Divshot;
 
-},{"./apps":2,"./builds":4,"./helpers/defaults":5,"./user":6,"__browserify_process":8,"narrator":15}],2:[function(require,module,exports){
+},{"./apps":2,"./builds":4,"./helpers/defaults":5,"./releases":6,"./user":7,"__browserify_process":9,"narrator":16}],2:[function(require,module,exports){
 module.exports = function (api, divshot) {
   var user = require('./user')(api);
   
@@ -131,7 +133,7 @@ module.exports = function (api, divshot) {
           config: function (configData, callback) {
             var url = this.url() + '/config';
             
-            this.http.request(url, 'PUT', {
+            return this.http.request(url, 'PUT', {
               form: {
                 config: configData
               }
@@ -148,7 +150,7 @@ module.exports = function (api, divshot) {
   
   return apps;
 };
-},{"./user":6}],3:[function(require,module,exports){
+},{"./user":7}],3:[function(require,module,exports){
 angular.module('divshot', [])
   .provider('divshot', function () {
     var Divshot = require('../Divshot');
@@ -181,7 +183,7 @@ angular.module('divshot', [])
       }
     };
   });
-},{"../Divshot":1,"narrator":15,"narrator/lib/browser/asHttp":9,"narrator/lib/browser/asQ":10}],4:[function(require,module,exports){
+},{"../Divshot":1,"narrator":16,"narrator/lib/browser/asHttp":10,"narrator/lib/browser/asQ":11}],4:[function(require,module,exports){
 module.exports = function (api, divshot) {
   var user = require('./user')(api);
   
@@ -210,7 +212,7 @@ module.exports = function (api, divshot) {
   
   return builds;
 };
-},{"./user":6}],5:[function(require,module,exports){
+},{"./user":7}],5:[function(require,module,exports){
 module.exports = function(options, defaults) {
   options = options || {};
 
@@ -223,6 +225,22 @@ module.exports = function(options, defaults) {
   return options;
 };
 },{}],6:[function(require,module,exports){
+module.exports = function (api, divshot) {
+  var user = require('./user')(api);
+  
+  var releases = api.endpoint('releases', {
+    lookup: function (hostname, callback) {
+      var url = this.url() + '/lookup?host=' + hostname;
+      
+      return this.http.request(url, 'GET', function (err, response, body) {
+        console.log(body);
+      });
+    }
+  });
+  
+  return releases;
+};
+},{"./user":7}],7:[function(require,module,exports){
 module.exports = function (api, divshot, credentials) {
   var user = api.endpoint('user', {
     credentials: credentials,
@@ -269,9 +287,9 @@ module.exports = function (api, divshot, credentials) {
   
   return user;
 };
-},{}],7:[function(require,module,exports){
-
 },{}],8:[function(require,module,exports){
+
+},{}],9:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -325,7 +343,7 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 module.exports = function (Http, $http) {
   Http.prototype._request = function (options, callback) {
     options.data = options.data || options.form;
@@ -339,7 +357,7 @@ module.exports = function (Http, $http) {
       });
   };
 };
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 module.exports = function (Http, $rootScope, $q) {
   Http.prototype._promiseWrap = function (callback) {
     var d = $q.defer();
@@ -357,7 +375,7 @@ module.exports = function (Http, $rootScope, $q) {
     return d.promise;
   };
 };
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 var defaults = require('./helpers/defaults');
 var extend = require('extend');
 var urljoin = require('url-join');
@@ -450,7 +468,7 @@ Endpoint.prototype.getEndpoint = function (path, id) {
   return this.options._endpoints[pathKey];
 };
 
-},{"./entity":12,"./helpers/defaults":13,"./http":14,"extend":16,"url-join":17}],12:[function(require,module,exports){
+},{"./entity":13,"./helpers/defaults":14,"./http":15,"extend":17,"url-join":18}],13:[function(require,module,exports){
 var Http = require('./http');
 var urljoin = require('url-join');
 var defaults = require('./helpers/defaults');
@@ -533,9 +551,9 @@ Entity.prototype.getEndpoint = function (path, id) {
   return this.options._endpoints[pathKey];
 };
 
-},{"./helpers/defaults":13,"./http":14,"./narrator":15,"extend":16,"url-join":17}],13:[function(require,module,exports){
+},{"./helpers/defaults":14,"./http":15,"./narrator":16,"extend":17,"url-join":18}],14:[function(require,module,exports){
 module.exports=require(5)
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 var process=require("__browserify_process");var extend = require('extend');
 var defaults = require('./helpers/defaults');
 var request = require('request');
@@ -658,7 +676,7 @@ Http.prototype.request = function (path, method, options, callback) {
     });
   });
 };
-},{"./helpers/defaults":13,"__browserify_process":8,"extend":16,"promise":7,"request":7}],15:[function(require,module,exports){
+},{"./helpers/defaults":14,"__browserify_process":9,"extend":17,"promise":8,"request":8}],16:[function(require,module,exports){
 var extend = require('extend');
 var urljoin = require('url-join');
 var Promise = require('promise');
@@ -696,7 +714,7 @@ Narrator.prototype.endpoint = function (path, userDefined) {
   return this._endpoints[pathKey];
 };
 
-},{"./endpoint":11,"./http":14,"extend":16,"promise":7,"url-join":17}],16:[function(require,module,exports){
+},{"./endpoint":12,"./http":15,"extend":17,"promise":8,"url-join":18}],17:[function(require,module,exports){
 var hasOwn = Object.prototype.hasOwnProperty;
 var toString = Object.prototype.toString;
 
@@ -776,7 +794,7 @@ module.exports = function extend() {
 	return target;
 };
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 function normalize (str) {
   return str
           .replace(/[\/]+/g, '/')

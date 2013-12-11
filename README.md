@@ -13,7 +13,7 @@ npm install divshot --save
 Refer to the [Narrator](https://github.com/scottcorgan/narrator) api for a more in depth understanding of all available methods.
 
 **CommonJS (Node/Browserify)**
-```javascript
+```js
 var Divshot = require('divshot');
 ```
 
@@ -24,7 +24,7 @@ var Divshot = require('divshot');
 
 ###Instantiate
 
-```javascript
+```js
 var api = Divshot.createClient({
   email: 'someone@divshot.com',
   password: 'somepassword123!',
@@ -39,7 +39,7 @@ var api = Divshot.createClient({
 
 Located at ` /dist/divshot.angular.js `
 
-```javascript
+```js
 angular.module('myApp', ['divshot'])
   .config(function (divshotProvider) {
     divshotProvider.configure({
@@ -57,7 +57,7 @@ angular.module('myApp', ['divshot'])
 
 By default, the ` authenticate ` method will be called on each request as a pre hook. If a token is provided, this does not create another http request.
 
-```javascript
+```js
 api.user.authenticate(function (err, token) {
 
 });
@@ -74,7 +74,7 @@ api.user.setCredentials({
 
 ###Apps
 
-```javascript
+```js
 // List apps
 api.apps.list(function (err, apps) {
   
@@ -89,7 +89,7 @@ app.get(function (err, app) {
 
 ### Builds
 
-```javascript
+```js
 app.builds.list(function (err, builds) {
   
 });
@@ -109,7 +109,7 @@ app.builds.id('build id').release('production', function (err, response) {
 
 ###Releases
 
-```javascript
+```js
 app.releases.list(function (err, releases) {
   
 });
@@ -130,7 +130,7 @@ app.releases.env('production').promote('staging', function (err, callback) {
 
 ###Domains
 
-```javascript
+```js
 app.domains.add('www.domain.com', function (err, response) {
   
 });
@@ -139,6 +139,16 @@ app.domains.remove('www.domain.com', function (err, response) {
   
 });
 
+```
+
+###App Environment Configuration
+
+```js
+app.env('development').config({
+  auth: 'username:password'
+}, function (err, response) {
+  
+});
 ```
 
 ## Build

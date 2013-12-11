@@ -2,3 +2,4 @@ node_modules
 npm-debug.log
 spikes/
 lib/test.js
+test/__integration.js

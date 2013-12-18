@@ -1,9 +1,9 @@
 {
   "name": "divshot",
-  "version": "0.3.0",
+  "version": "0.4.4",
   "homepage": "https://github.com/divshot/divshot-api",
   "authors": [
-    "Scott Corgan <scottcorgan@gmail.com>"
+    "Scott Corgan <scott@divshot.com>"
   ],
   "description": "Wrapper for the Divshot api",
   "main": "dist/divshot.min.js",
@@ -18,6 +18,11 @@
     "bower_components",
     "test",
     "tests",
-    "lib"
+    "lib",
+    "spikes",
+    "lib",
+    "Gruntfile.js",
+    ".jshintrc",
+    ".gitignore"
   ]
 }

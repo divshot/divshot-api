@@ -39,6 +39,7 @@ Divshot.prototype.setTokenHeader = function (token, context) {
 
 Divshot.prototype.setToken = function (token) {
   this.options.token = token;
+  this._api.headers.authorization = 'Bearer ' + token;
 };
 
 module.exports = Divshot;
@@ -130,6 +131,9 @@ module.exports = function (api, divshot) {
       // PUT /apps/:app_id/env/:env/config
       app.env = function (env) {
         return app.endpoint('env').one(env, {
+          
+          // TODO: make this "protect" for a short hand??
+          
           config: function (configData, callback) {
             var url = this.url() + '/config';
             

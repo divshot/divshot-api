@@ -53,7 +53,7 @@ module.exports = function (api, divshot) {
   var apps = api.endpoint('apps', {
     hooks: {
       pre: function (next) {
-        this.getEndpoint('user').authenticate(function (err, token) {
+        this.getEndpoint('users').authenticate(function (err, token) {
           divshot.setTokenHeader(token, apps);
           next();
         });
@@ -208,7 +208,7 @@ module.exports = function (api, divshot) {
   var organizations = api.endpoint('organizations', {
     hooks: {
       pre: function (next) {
-        this.getEndpoint('user').authenticate(function (err, token) {
+        this.getEndpoint('users').authenticate(function (err, token) {
           divshot.setTokenHeader(token, organizations);
           next();
         });
@@ -343,7 +343,8 @@ process.nextTick = (function () {
     if (canPost) {
         var queue = [];
         window.addEventListener('message', function (ev) {
-            if (ev.source === window && ev.data === 'process-tick') {
+            var source = ev.source;
+            if ((source === window || source === null) && ev.data === 'process-tick') {
                 ev.stopPropagation();
                 if (queue.length > 0) {
                     var fn = queue.shift();
@@ -1028,7 +1029,7 @@ if (typeof setImmediate === 'function') { // IE >= 10 & node.js >= 0.10
 }
 
 },{"__browserify_process":8}],19:[function(require,module,exports){
-/*! version: 0.9.6
+/*! version: 0.9.7
   * Reqwest! A general purpose XHR connection manager
   * license MIT (c) Dustin Diaz 2013
   * https://github.com/ded/reqwest
@@ -1225,7 +1226,10 @@ if (typeof setImmediate === 'function') { // IE >= 10 & node.js >= 0.10
 
     if (o['type'] == 'jsonp') return handleJsonp(o, fn, err, url)
 
-    http = xhr(o)
+    // get the xhr from the factory if passed
+    // if the factory returns null, fall-back to ours
+    http = (o.xhr && o.xhr(o)) || xhr(o)
+
     http.open(method, url, o['async'] === false ? false : true)
     setHeaders(http, o)
     setCredentials(http, o)

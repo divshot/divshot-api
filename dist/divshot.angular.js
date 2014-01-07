@@ -53,7 +53,7 @@ module.exports = function (api, divshot) {
   var apps = api.endpoint('apps', {
     hooks: {
       pre: function (next) {
-        this.getEndpoint('user').authenticate(function (err, token) {
+        this.getEndpoint('users').authenticate(function (err, token) {
           divshot.setTokenHeader(token, apps);
           next();
         });
@@ -241,7 +241,7 @@ module.exports = function (api, divshot) {
   var organizations = api.endpoint('organizations', {
     hooks: {
       pre: function (next) {
-        this.getEndpoint('user').authenticate(function (err, token) {
+        this.getEndpoint('users').authenticate(function (err, token) {
           divshot.setTokenHeader(token, organizations);
           next();
         });
@@ -378,7 +378,8 @@ process.nextTick = (function () {
     if (canPost) {
         var queue = [];
         window.addEventListener('message', function (ev) {
-            if (ev.source === window && ev.data === 'process-tick') {
+            var source = ev.source;
+            if ((source === window || source === null) && ev.data === 'process-tick') {
                 ev.stopPropagation();
                 if (queue.length > 0) {
                     var fn = queue.shift();

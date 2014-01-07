@@ -13,6 +13,7 @@ npm install divshot --save
 Refer to the [Narrator](https://github.com/scottcorgan/narrator) api for a more in depth understanding of all available methods.
 
 **CommonJS (Node/Browserify)**
+
 ```js
 var Divshot = require('divshot');
 ```
@@ -58,8 +59,8 @@ angular.module('myApp', ['divshot'])
 By default, the ` authenticate ` method will be called on each request as a pre hook. If a token is provided, this does not create another http request.
 
 ```js
-api.user.authenticate(function (err, token) {
-
+api.user.authenticate().then(function (user) {
+  console.log(user);
 });
 
 api.user.setCredentials({

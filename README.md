@@ -76,6 +76,26 @@ api.user.setCredentials({
 api.user.self().then(function (user) {
   // user data
 });
+
+```
+
+#### User Emails
+
+```js
+// Add email
+divshot.user.emails.add('something@aol.com').then(function (res) {
+  
+});
+
+// Remove email
+divshot.user.emails.remove('something@aol.com').then(function (res) {
+  
+});
+
+// Resend email
+divshot.user.emails.resend('something@aol.com').then(function (res) {
+  
+});
 ```
 
 ### Organizations

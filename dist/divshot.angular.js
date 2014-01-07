@@ -5,6 +5,7 @@ var user = require('./user');
 var apps = require('./apps');
 var builds = require('./builds');
 var releases = require('./releases');
+var organizations = require('./organizations');
 
 var Divshot = function (options) {
   this.defaults = {};
@@ -26,6 +27,7 @@ var Divshot = function (options) {
   this.apps = apps(this._api, this);
   this.builds = builds(this._api, this);
   this.releases = releases(this._api, this);
+  this.organizations = organizations(this._api, this);
 };
 
 Divshot.createClient = function (options) {
@@ -44,7 +46,7 @@ Divshot.prototype.setToken = function (token) {
 
 module.exports = Divshot;
 
-},{"./apps":2,"./builds":4,"./helpers/defaults":5,"./releases":6,"./user":7,"__browserify_process":9,"narrator":16}],2:[function(require,module,exports){
+},{"./apps":2,"./builds":4,"./helpers/defaults":5,"./organizations":6,"./releases":7,"./user":8,"__browserify_process":10,"narrator":17}],2:[function(require,module,exports){
 module.exports = function (api, divshot) {
   var user = require('./user')(api);
   
@@ -149,12 +151,17 @@ module.exports = function (api, divshot) {
       };
       
       return app;
+    },
+    
+    organization: function (orgId, callback) {
+      var url = this.options.host + '/organizations/' + orgId + '/apps';
+      return this.http.request(url, 'GET', callback);
     }
   });
   
   return apps;
 };
-},{"./user":7}],3:[function(require,module,exports){
+},{"./user":8}],3:[function(require,module,exports){
 angular.module('divshot', [])
   .provider('divshot', function () {
     var Divshot = require('../Divshot');
@@ -187,7 +194,7 @@ angular.module('divshot', [])
       }
     };
   });
-},{"../Divshot":1,"narrator":16,"narrator/lib/browser/asHttp":10,"narrator/lib/browser/asQ":11}],4:[function(require,module,exports){
+},{"../Divshot":1,"narrator":17,"narrator/lib/browser/asHttp":11,"narrator/lib/browser/asQ":12}],4:[function(require,module,exports){
 module.exports = function (api, divshot) {
   var user = require('./user')(api);
   
@@ -216,7 +223,7 @@ module.exports = function (api, divshot) {
   
   return builds;
 };
-},{"./user":7}],5:[function(require,module,exports){
+},{"./user":8}],5:[function(require,module,exports){
 module.exports = function(options, defaults) {
   options = options || {};
 
@@ -229,6 +236,31 @@ module.exports = function(options, defaults) {
   return options;
 };
 },{}],6:[function(require,module,exports){
+module.exports = function (api, divshot) {
+  var user = require('./user')(api);
+  var organizations = api.endpoint('organizations', {
+    hooks: {
+      pre: function (next) {
+        this.getEndpoint('user').authenticate(function (err, token) {
+          divshot.setTokenHeader(token, organizations);
+          next();
+        });
+      },
+      
+    },
+    
+    id: function (id) {
+      var org = this.one(id);
+      
+      org.apps = org.endpoint('/apps');
+      
+      return org;
+    }
+  });
+  
+  return organizations;
+};
+},{"./user":8}],7:[function(require,module,exports){
 module.exports = function (api, divshot) {
   var user = require('./user')(api);
   
@@ -244,7 +276,7 @@ module.exports = function (api, divshot) {
   
   return releases;
 };
-},{"./user":7}],7:[function(require,module,exports){
+},{"./user":8}],8:[function(require,module,exports){
 module.exports = function (api, divshot, credentials) {
   var user = api.endpoint('user', {
     credentials: credentials,
@@ -286,14 +318,18 @@ module.exports = function (api, divshot, credentials) {
       this.credentials.email = credentials.email;
       this.credentials.password = credentials.password;
       this.credentials.token = credentials.token;
+    },
+    
+    self: function (callback) {
+      return this.http.request(this.options.host + '/self', 'GET', callback);
     }
   });
   
   return user;
 };
-},{}],8:[function(require,module,exports){
-
 },{}],9:[function(require,module,exports){
+
+},{}],10:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -347,7 +383,7 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 module.exports = function (Http, $http) {
   Http.prototype._request = function (options, callback) {
     options.data = options.data || options.form;
@@ -361,7 +397,7 @@ module.exports = function (Http, $http) {
       });
   };
 };
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 module.exports = function (Http, $rootScope, $q) {
   Http.prototype._promiseWrap = function (callback) {
     var d = $q.defer();
@@ -379,7 +415,7 @@ module.exports = function (Http, $rootScope, $q) {
     return d.promise;
   };
 };
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 var defaults = require('./helpers/defaults');
 var extend = require('extend');
 var urljoin = require('url-join');
@@ -472,7 +508,7 @@ Endpoint.prototype.getEndpoint = function (path, id) {
   return this.options._endpoints[pathKey];
 };
 
-},{"./entity":13,"./helpers/defaults":14,"./http":15,"extend":17,"url-join":18}],13:[function(require,module,exports){
+},{"./entity":14,"./helpers/defaults":15,"./http":16,"extend":18,"url-join":19}],14:[function(require,module,exports){
 var Http = require('./http');
 var urljoin = require('url-join');
 var defaults = require('./helpers/defaults');
@@ -555,9 +591,9 @@ Entity.prototype.getEndpoint = function (path, id) {
   return this.options._endpoints[pathKey];
 };
 
-},{"./helpers/defaults":14,"./http":15,"./narrator":16,"extend":17,"url-join":18}],14:[function(require,module,exports){
+},{"./helpers/defaults":15,"./http":16,"./narrator":17,"extend":18,"url-join":19}],15:[function(require,module,exports){
 module.exports=require(5)
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 var process=require("__browserify_process");var extend = require('extend');
 var defaults = require('./helpers/defaults');
 var request = require('request');
@@ -680,7 +716,7 @@ Http.prototype.request = function (path, method, options, callback) {
     });
   });
 };
-},{"./helpers/defaults":14,"__browserify_process":9,"extend":17,"promise":8,"request":8}],16:[function(require,module,exports){
+},{"./helpers/defaults":15,"__browserify_process":10,"extend":18,"promise":9,"request":9}],17:[function(require,module,exports){
 var extend = require('extend');
 var urljoin = require('url-join');
 var Promise = require('promise');
@@ -718,7 +754,7 @@ Narrator.prototype.endpoint = function (path, userDefined) {
   return this._endpoints[pathKey];
 };
 
-},{"./endpoint":12,"./http":15,"extend":17,"promise":8,"url-join":18}],17:[function(require,module,exports){
+},{"./endpoint":13,"./http":16,"extend":18,"promise":9,"url-join":19}],18:[function(require,module,exports){
 var hasOwn = Object.prototype.hasOwnProperty;
 var toString = Object.prototype.toString;
 
@@ -798,7 +834,7 @@ module.exports = function extend() {
 	return target;
 };
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 function normalize (str) {
   return str
           .replace(/[\/]+/g, '/')

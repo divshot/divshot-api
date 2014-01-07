@@ -59,8 +59,8 @@ angular.module('myApp', ['divshot'])
 By default, the ` authenticate ` method will be called on each request as a pre hook. If a token is provided, this does not create another http request.
 
 ```js
-api.user.authenticate().then(function (user) {
-  console.log(user);
+api.user.authenticate(function (err, token) {
+  
 });
 
 api.user.setCredentials({
@@ -71,9 +71,35 @@ api.user.setCredentials({
   
   token: 'some_really_long_access_token_from_divshot'
 });
+
+// User data
+api.user.self().then(function (user) {
+  // user data
+});
 ```
 
-###Apps
+### Organizations
+
+```js
+// Users orgs
+divshot.organizations.list().then(function (orgs) {
+  
+});
+
+// A single organization
+divshot.organizations.id(someOrgId).get().then(function (org) {
+  
+});
+
+// Apps from an organization
+divshot.organizations.id(someOrgId).apps.list().then(function (apps) {
+  
+});
+
+
+```
+
+### Apps
 
 ```js
 // List apps

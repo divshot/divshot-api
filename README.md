@@ -77,6 +77,14 @@ api.user.self().then(function (user) {
   // user data
 });
 
+// Update user
+var user = api.user.id(userId);
+user.update({
+  name: 'First Last'
+}).then(function (user) {
+  
+});
+
 ```
 
 #### User Emails

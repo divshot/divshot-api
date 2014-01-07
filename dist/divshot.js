@@ -264,10 +264,14 @@ module.exports = function (api, divshot, credentials) {
     }
   });
   
-  var user = api.endpoint('user', {
+  var user = api.endpoint('users', {
     credentials: credentials,
     
     emails: emails,
+    
+    id: function (id) {
+      return user.one(id);
+    },
     
     authenticate: function (callback) {
       var self = this;

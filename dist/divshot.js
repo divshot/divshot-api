@@ -53,7 +53,7 @@ module.exports = function (api, divshot) {
   var apps = api.endpoint('apps', {
     hooks: {
       pre: function (next) {
-        this.getEndpoint('user').authenticate(function (err, token) {
+        this.getEndpoint('users').authenticate(function (err, token) {
           divshot.setTokenHeader(token, apps);
           next();
         });
@@ -168,7 +168,7 @@ module.exports = function (api, divshot) {
   var builds = api.endpoint('builds', {
     hooks: {
       pre: function (next) {
-        this.getEndpoint('user').authenticate(function (err, token) {
+        this.getEndpoint('users').authenticate(function (err, token) {
           divshot.setTokenHeader(token, builds);
           next();
         });
@@ -208,7 +208,7 @@ module.exports = function (api, divshot) {
   var organizations = api.endpoint('organizations', {
     hooks: {
       pre: function (next) {
-        this.getEndpoint('user').authenticate(function (err, token) {
+        this.getEndpoint('users').authenticate(function (err, token) {
           divshot.setTokenHeader(token, organizations);
           next();
         });
@@ -235,9 +235,7 @@ module.exports = function (api, divshot) {
     lookup: function (hostname, callback) {
       var url = this.url() + '/lookup?host=' + hostname;
       
-      return this.http.request(url, 'GET', function (err, response, body) {
-        console.log(body);
-      });
+      return this.http.request(url, 'GET', callback);
     }
   });
   

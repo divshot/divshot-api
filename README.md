@@ -91,6 +91,18 @@ user.update({
 
 ```
 
+#### User password
+
+```js
+// Change password
+divshot.user.password.update({
+  password: 'Password123',
+  password_confirm: 'Password123'
+}).then(function (res) {
+  
+});
+```
+
 #### User Emails
 
 ```js

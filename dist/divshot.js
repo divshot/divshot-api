@@ -264,10 +264,13 @@ module.exports = function (api, divshot, credentials) {
     }
   });
   
+  var password = api.endpoint('self').one('password');
+  
   var user = api.endpoint('users', {
     credentials: credentials,
     
     emails: emails,
+    password: password,
     
     id: function (id) {
       return user.one(id);
@@ -314,9 +317,11 @@ module.exports = function (api, divshot, credentials) {
     
     self: function (callback) {
       return this.http.request(this.options.host + '/self', 'GET', callback);
-    }
+    },
+    
+    
   });
-  
+
   return user;
 };
 },{}],8:[function(require,module,exports){

@@ -2,6 +2,20 @@
 
 Wrapper for the Divshot API. 
 
+### Contents
+
+* [Instantiate](#instantiate)
+* [Angular Module](#angular-module)
+* [User](#user)
+  * [Password](#user-password)
+  * [Emails](#user-emails)
+* [Organizations](#organizations)
+* [Apps](#apps)
+  * [Builds](#builds)
+  * [Releases](#releases)
+  * [Domains](#domains)
+  * [Environment Configuration](#app-environment-configuration)
+
 ## Install
 
 ```

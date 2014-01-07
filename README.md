@@ -74,7 +74,11 @@ api.user.setCredentials({
 
 // User data
 api.user.self().then(function (user) {
-  // user data
+  
+});
+// OR
+api.user.id(userId).get().then(function (user) {
+  
 });
 
 // Update user

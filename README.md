@@ -125,6 +125,11 @@ divshot.user.emails.add('something@aol.com').then(function (res) {
   
 });
 
+// Set primary email
+divshot.user.emails.primary('something@aol.com').then(function (res) {
+  
+});
+
 // Remove email
 divshot.user.emails.remove('something@aol.com').then(function (res) {
   

@@ -276,10 +276,22 @@ module.exports = function (api, divshot) {
 };
 },{"./user":8}],8:[function(require,module,exports){
 module.exports = function (api, divshot, credentials) {
+  
   var emails = api.endpoint('self/emails', {
     add: function (email, callback) {
       return this.http.request(this.url(), 'POST', {
-        form: { address: email }
+        form: {
+          address: email
+        }
+      }, callback);
+    },
+    
+    primary: function (email, callback) {
+      return this.http.request(this.url(), 'POST', {
+        form: {
+          address: email,
+          primary: true
+        }
       }, callback);
     },
     

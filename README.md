@@ -166,13 +166,18 @@ divshot.organizations.id(someOrgId).apps.list().then(function (apps) {
 
 ```js
 // List apps
-api.apps.list(function (err, apps) {
+api.apps.list().then(function (apps) {
+  
+});
+
+// Create an app
+api.apps.create('app-name').then(function (app) {
   
 });
 
 // A specific app
 var app = api.apps.id('app name');
-app.get(function (err, app) {
+app.get().then(function (app) {
   
 });
 ```

@@ -156,6 +156,14 @@ module.exports = function (api, divshot) {
     organization: function (orgId, callback) {
       var url = this.options.host + '/organizations/' + orgId + '/apps';
       return this.http.request(url, 'GET', callback);
+    },
+    
+    create: function (name, callback) {
+      return this.http.request(this.url(), 'POST', {
+        form: {
+          name: name
+        }
+      }, callback);
     }
   });
   

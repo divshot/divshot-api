@@ -226,11 +226,18 @@ app.releases.env('production').promote('staging', function (err, callback) {
 ###Domains
 
 ```js
-app.domains.add('www.domain.com', function (err, response) {
+// List domains for an app
+app.domains.list().then(function(domains) {
   
 });
 
-app.domains.remove('www.domain.com', function (err, response) {
+// Add a domain
+app.domains.add('www.domain.com').then(function (response) {
+  
+});
+
+// Remove a domain
+app.domains.remove('www.domain.com').then(function (response) {
   
 });
 

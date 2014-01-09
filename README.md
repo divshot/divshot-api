@@ -175,7 +175,7 @@ divshot.organizations.id(someOrgId).update({
 
 ```js
 // Get org members
-divshot.organizations.id(someOrg).members.list().then(function (memebers) {
+divshot.organizations.id(someOrg).members.list().then(function (members) {
   
 });
 
@@ -188,7 +188,7 @@ divshot.organizations.id(someOrg).members.create({
 });
 
 // Update a member in organiztion
-divshot.organizations.id(someOrg).memebers.id(memberid).update({
+divshot.organizations.id(someOrg).members.id(memberid).update({
   admin: false // or true
 }).then(function (res) {
   

@@ -145,16 +145,6 @@ divshot.user.emails.resend('something@aol.com').then(function (res) {
 ### Organizations
 
 ```js
-// Update organization
-divshot.organizations.update({
-  name: 'name',
-  billing_email: 'someone@aol.com',
-  gravatar_email: 'someone@aol.com',
-  etc: 'other stuff'
-}).then(function (res) {
-  
-});
-
 // Users orgs
 divshot.organizations.list().then(function (orgs) {
   
@@ -167,6 +157,16 @@ divshot.organizations.id(someOrgId).get().then(function (org) {
 
 // Apps from an organization
 divshot.organizations.id(someOrgId).apps.list().then(function (apps) {
+  
+});
+
+// Update organization
+divshot.organizations.id(someOrgId).update({
+  name: 'name',
+  billing_email: 'someone@aol.com',
+  gravatar_email: 'someone@aol.com',
+  etc: 'other stuff'
+}).then(function (res) {
   
 });
 ```

@@ -144,7 +144,7 @@ divshot.user.emails.resend('something@aol.com').then(function (res) {
 ### Organizations
 
 ```js
-
+// Update organization
 divshot.organizations.update({
   name: 'name',
   billing_email: 'someone@aol.com',
@@ -174,6 +174,13 @@ divshot.organizations.id(someOrg).members.list().then(function (memebers) {
   
 });
 
+// Invite memeber to organization
+divshot.organizations.id(someOrg).members.create({
+  name: email,
+  email: email
+}).then(function (res) {
+  
+});
 
 ```
 

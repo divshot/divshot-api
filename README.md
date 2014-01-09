@@ -10,7 +10,7 @@ Wrapper for the Divshot API.
   * [Password](#user-password)
   * [Emails](#user-emails)
 * [Organizations](#organizations)
-  * [Members](#organization-memebers)
+  * [Members](#organization-members)
 * [Apps](#apps)
   * [Builds](#builds)
   * [Releases](#releases)

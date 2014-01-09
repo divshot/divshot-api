@@ -182,6 +182,13 @@ divshot.organizations.id(someOrg).members.create({
   
 });
 
+// Update a member in organiztion
+divshot.organizations.id(someOrg).memebers.id(memberid).update({
+  admin: false // or true
+}).then(function (res) {
+  
+});
+
 // Remove a member from an organization
 divshot.organizations.id(someOrg).members.id(memberId).remove().then(function () {
   

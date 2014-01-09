@@ -10,6 +10,7 @@ Wrapper for the Divshot API.
   * [Password](#user-password)
   * [Emails](#user-emails)
 * [Organizations](#organizations)
+  * [Members](#organization-memebers)
 * [Apps](#apps)
   * [Builds](#builds)
   * [Releases](#releases)
@@ -168,13 +169,17 @@ divshot.organizations.id(someOrgId).get().then(function (org) {
 divshot.organizations.id(someOrgId).apps.list().then(function (apps) {
   
 });
+```
 
-// Get org memebers
+### Organization Members
+
+```js
+// Get org members
 divshot.organizations.id(someOrg).members.list().then(function (memebers) {
   
 });
 
-// Invite memeber to organization
+// Invite members to organization
 divshot.organizations.id(someOrg).members.create({
   name: email,
   email: email

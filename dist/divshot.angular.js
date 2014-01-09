@@ -261,7 +261,11 @@ module.exports = function (api, divshot) {
       var org = this.one(id);
       
       org.apps = org.endpoint('apps');
-      org.members = org.endpoint('members');
+      org.members = org.endpoint('members', {
+        id: function (id) {
+          return this.one(id);
+        }
+      });
       
       return org;
     }

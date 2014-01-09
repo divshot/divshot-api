@@ -182,6 +182,11 @@ divshot.organizations.id(someOrg).members.create({
   
 });
 
+// Remove a member from an organization
+divshot.organizations.id(someOrg).members.id(memberId).remove().then(function () {
+  
+});
+
 ```
 
 ### Apps

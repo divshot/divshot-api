@@ -6,7 +6,7 @@ module.exports = function(grunt) {
     browserify: {
       standalone: {
         files: {
-          'dist/divshot.js': ['lib/Divshot.js'],
+          'dist/divshot.js': ['lib/browser/client.js'],
         },
         options: {
           standalone: 'Divshot'

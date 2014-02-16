@@ -42,6 +42,8 @@ var Divshot = require('divshot');
 
 ```js
 var api = Divshot.createClient({
+  client_id: '123abc', // MUST be specified
+  
   email: 'someone@divshot.com',
   password: 'somepassword123!',
   
@@ -58,7 +60,7 @@ easily authenticating a user without requiring the handling of usernames or pass
 To use browser authentication, simply instantiate a client and call the `auth` method:
 
 ```js
-var api = Divshot.createClient({});
+var api = Divshot.createClient({client_id: 'abc123'});
 api.auth(function(error, user) {
   if (error) {
     // something has gone wrong with the auth process, handle it here

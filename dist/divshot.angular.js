@@ -346,7 +346,7 @@ module.exports = function (api, divshot, credentials) {
           grant_type: 'password'
         },
         headers: {
-          Authorization: 'Basic NTI1NTc4YTM0MjFhYTk4MTU1MDAwMDA0Og==' // TODO: move this elsewhere
+          Authorization: 'Basic ' + btoa(this.options.client_id + ":")
         }
       }, function (err, response, body) {
         if (callback && err || body.status) {

@@ -194,7 +194,7 @@ var auth = function(callback) {
   }
   
   window.addEventListener('message', tokenListener);
-  var popup = window.open(authOrigin + "/authorize?grant_type=post_message&client_id=525578a3421aa98155000004", "divshotauth", "top=50,left=50,width=480,height=640,status=1,menubar=0,location=0,personalbar=0");
+  var popup = window.open(authOrigin + "/authorize?grant_type=post_message&client_id=" + this.options.client_id, "divshotauth", "top=50,left=50,width=480,height=640,status=1,menubar=0,location=0,personalbar=0");
   
   interval = window.setInterval(function() {
     try {
@@ -357,7 +357,7 @@ module.exports = function (api, divshot, credentials) {
           grant_type: 'password'
         },
         headers: {
-          Authorization: 'Basic NTI1NTc4YTM0MjFhYTk4MTU1MDAwMDA0Og==' // TODO: move this elsewhere
+          Authorization: 'Basic ' + btoa(this.options.client_id + ":")
         }
       }, function (err, response, body) {
         if (callback && err || body.status) {

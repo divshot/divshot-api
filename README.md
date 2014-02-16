@@ -51,6 +51,24 @@ var api = Divshot.createClient({
 });
 ```
 
+###Browser Authentication
+
+The Divshot API wrapper provides a simple, popup-based authentication mechanism for
+easily authenticating a user without requiring the handling of usernames or passwords.
+To use browser authentication, simply instantiate a client and call the `auth` method:
+
+```js
+var api = Divshot.createClient({});
+api.auth(function(error, user) {
+  if (error) {
+    // something has gone wrong with the auth process, handle it here
+  } else {
+    // you can now operate as if the client is authenticated. also,
+    // user will be populated with basic user information
+  }
+});
+```
+
 ###Angular Module
 
 Located at ` /dist/divshot.angular.js `

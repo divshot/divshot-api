@@ -61,12 +61,14 @@ To use browser authentication, simply instantiate a client and call the `auth` m
 
 ```js
 var api = Divshot.createClient({client_id: 'abc123'});
-api.auth(function(error, user) {
+api.auth(function(error, user, token) {
   if (error) {
     // something has gone wrong with the auth process, handle it here
   } else {
     // you can now operate as if the client is authenticated. also,
-    // user will be populated with basic user information
+    // 'user' argument will be populated with basic user information
+    // and 'token' parameter will contain the access token for storage
+    // or other use
   }
 });
 ```

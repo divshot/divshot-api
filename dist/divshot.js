@@ -122,11 +122,11 @@ module.exports = function (api, divshot) {
         },
         
         add: function (domain, callback) {
-          this._domainRequest(domain, 'PUT', callback);
+          return this._domainRequest(domain, 'PUT', callback);
         },
         
         remove: function (domain, callback) {
-          this._domainRequest(domain, 'DELETE', callback);
+          return this._domainRequest(domain, 'DELETE', callback);
         }
       });
       

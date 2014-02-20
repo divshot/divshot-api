@@ -7,7 +7,7 @@ var builds = require('./builds');
 var releases = require('./releases');
 var organizations = require('./organizations');
 
-// var DIVSHOT_API_VERSION = '0.5.0';
+var DIVSHOT_API_VERSION = '0.4.0';
 
 var Divshot = function (options) {
   this.defaults = {};
@@ -96,6 +96,16 @@ module.exports = function (api, divshot) {
           return this.one(id, {
             rollback: function (callback) {
               return this.http.request(this.url() + '/rollback', 'POST', function (err, response, body) {
+                if (callback) callback(err, response);
+              });
+            },
+            
+            rollbackTo: function (version, callback) {
+              return this.http.request(this.url() + '/rollback', 'POST', {
+                form: {
+                  version: version
+                }
+              }, function (err, response, body) {
                 if (callback) callback(err, response);
               });
             },

@@ -213,8 +213,10 @@ var auth = function(callback) {
 module.exports = auth;
 },{"../Divshot.js":1}],4:[function(require,module,exports){
 var Divshot = require('../Divshot.js');
-module.exports = Divshot;
+
 Divshot.prototype.auth = require('./auth.js');
+
+module.exports = Divshot;
 },{"../Divshot.js":1,"./auth.js":3}],5:[function(require,module,exports){
 module.exports = function (api, divshot) {
   var user = require('./user')(api);

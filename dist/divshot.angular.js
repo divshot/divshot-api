@@ -46,7 +46,7 @@ Divshot.prototype.setToken = function (token) {
 
 module.exports = Divshot;
 
-},{"./apps":2,"./builds":4,"./helpers/defaults":5,"./organizations":6,"./releases":7,"./user":8,"__browserify_process":10,"narrator":17}],2:[function(require,module,exports){
+},{"./apps":2,"./builds":5,"./helpers/defaults":6,"./organizations":7,"./releases":8,"./user":9,"__browserify_process":11,"narrator":18}],2:[function(require,module,exports){
 module.exports = function (api, divshot) {
   var user = require('./user')(api);
   
@@ -169,13 +169,58 @@ module.exports = function (api, divshot) {
   
   return apps;
 };
-},{"./user":8}],3:[function(require,module,exports){
+},{"./user":9}],3:[function(require,module,exports){
+var Divshot = require('../Divshot.js');
+
+var auth = function(callback) {
+  var authOrigin = this.options.auth_origin || 'https://auth.divshot.com';
+  var client = this;
+  var interval = null;
+  
+  var tokenListener = function(e) {
+    if (e.origin == authOrigin) {
+      if (interval){ window.clearInterval(interval); }
+      
+      var data = e.data;
+      if (data.error) {
+        callback(data, null, null);
+      } else {
+        client.setToken(data.token);
+        callback(null, data.user, data.access_token);  
+      }
+      
+      window.removeEventListener('message', tokenListener);
+      if (popup) { popup.close() };
+    }
+    return true;
+  }
+  
+  window.addEventListener('message', tokenListener);
+  var popup = window.open(authOrigin + "/authorize?grant_type=post_message&client_id=" + this.options.client_id, "divshotauth", "top=50,left=50,width=480,height=640,status=1,menubar=0,location=0,personalbar=0");
+  
+  interval = window.setInterval(function() {
+    try {
+      if (!popup || popup == null || popup.closed) {
+        window.clearInterval(interval);
+        callback({error: 'access_denied', error_description: 'The user closed the authentication window before the process was completed.'}, null);
+      }
+    } catch (e) {}
+  }, 500);
+  
+  return null; // TODO: Make this a promise
+}
+
+module.exports = auth;
+},{"../Divshot.js":1}],4:[function(require,module,exports){
 angular.module('divshot', [])
   .provider('divshot', function () {
     var Divshot = require('../Divshot');
+    var auth = require('./auth.js');
     var Http = require('narrator').Http;
     var asQ = require('narrator/lib/browser/asQ');
     var asHttp = require('narrator/lib/browser/asHttp');
+    
+    Divshot.prototype.auth = require('./auth.js');
     
     return {
       _options: {},
@@ -202,7 +247,7 @@ angular.module('divshot', [])
       }
     };
   });
-},{"../Divshot":1,"narrator":17,"narrator/lib/browser/asHttp":11,"narrator/lib/browser/asQ":12}],4:[function(require,module,exports){
+},{"../Divshot":1,"./auth.js":3,"narrator":18,"narrator/lib/browser/asHttp":12,"narrator/lib/browser/asQ":13}],5:[function(require,module,exports){
 module.exports = function (api, divshot) {
   var user = require('./user')(api);
   
@@ -231,7 +276,7 @@ module.exports = function (api, divshot) {
   
   return builds;
 };
-},{"./user":8}],5:[function(require,module,exports){
+},{"./user":9}],6:[function(require,module,exports){
 module.exports = function(options, defaults) {
   options = options || {};
 
@@ -243,7 +288,7 @@ module.exports = function(options, defaults) {
 
   return options;
 };
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 module.exports = function (api, divshot) {
   var user = require('./user')(api);
   var organizations = api.endpoint('organizations', {
@@ -273,7 +318,7 @@ module.exports = function (api, divshot) {
   
   return organizations;
 };
-},{"./user":8}],7:[function(require,module,exports){
+},{"./user":9}],8:[function(require,module,exports){
 module.exports = function (api, divshot) {
   var user = require('./user')(api);
   
@@ -287,7 +332,7 @@ module.exports = function (api, divshot) {
   
   return releases;
 };
-},{"./user":8}],8:[function(require,module,exports){
+},{"./user":9}],9:[function(require,module,exports){
 module.exports = function (api, divshot, credentials) {
   
   var emails = api.endpoint('self/emails', {
@@ -380,9 +425,9 @@ module.exports = function (api, divshot, credentials) {
 
   return user;
 };
-},{}],9:[function(require,module,exports){
-
 },{}],10:[function(require,module,exports){
+
+},{}],11:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -436,7 +481,7 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 module.exports = function (Http, $http) {
   Http.prototype._request = function (options, callback) {
     options.data = options.data || options.form;
@@ -450,7 +495,7 @@ module.exports = function (Http, $http) {
       });
   };
 };
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 module.exports = function (Http, $rootScope, $q) {
   Http.prototype._promiseWrap = function (callback) {
     var d = $q.defer();
@@ -468,7 +513,7 @@ module.exports = function (Http, $rootScope, $q) {
     return d.promise;
   };
 };
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 var defaults = require('./helpers/defaults');
 var extend = require('extend');
 var urljoin = require('url-join');
@@ -561,7 +606,7 @@ Endpoint.prototype.getEndpoint = function (path, id) {
   return this.options._endpoints[pathKey];
 };
 
-},{"./entity":14,"./helpers/defaults":15,"./http":16,"extend":18,"url-join":19}],14:[function(require,module,exports){
+},{"./entity":15,"./helpers/defaults":16,"./http":17,"extend":19,"url-join":20}],15:[function(require,module,exports){
 var Http = require('./http');
 var urljoin = require('url-join');
 var defaults = require('./helpers/defaults');
@@ -644,9 +689,9 @@ Entity.prototype.getEndpoint = function (path, id) {
   return this.options._endpoints[pathKey];
 };
 
-},{"./helpers/defaults":15,"./http":16,"./narrator":17,"extend":18,"url-join":19}],15:[function(require,module,exports){
-module.exports=require(5)
-},{}],16:[function(require,module,exports){
+},{"./helpers/defaults":16,"./http":17,"./narrator":18,"extend":19,"url-join":20}],16:[function(require,module,exports){
+module.exports=require(6)
+},{}],17:[function(require,module,exports){
 var process=require("__browserify_process");var extend = require('extend');
 var defaults = require('./helpers/defaults');
 var request = require('request');
@@ -769,7 +814,7 @@ Http.prototype.request = function (path, method, options, callback) {
     });
   });
 };
-},{"./helpers/defaults":15,"__browserify_process":10,"extend":18,"promise":9,"request":9}],17:[function(require,module,exports){
+},{"./helpers/defaults":16,"__browserify_process":11,"extend":19,"promise":10,"request":10}],18:[function(require,module,exports){
 var extend = require('extend');
 var urljoin = require('url-join');
 var Promise = require('promise');
@@ -807,7 +852,7 @@ Narrator.prototype.endpoint = function (path, userDefined) {
   return this._endpoints[pathKey];
 };
 
-},{"./endpoint":13,"./http":16,"extend":18,"promise":9,"url-join":19}],18:[function(require,module,exports){
+},{"./endpoint":14,"./http":17,"extend":19,"promise":10,"url-join":20}],19:[function(require,module,exports){
 var hasOwn = Object.prototype.hasOwnProperty;
 var toString = Object.prototype.toString;
 
@@ -887,7 +932,7 @@ module.exports = function extend() {
 	return target;
 };
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 function normalize (str) {
   return str
           .replace(/[\/]+/g, '/')
@@ -900,5 +945,5 @@ module.exports = function () {
   var joined = [].slice.call(arguments, 0).join('/');
   return normalize(joined);
 };
-},{}]},{},[3])
+},{}]},{},[4])
 ;

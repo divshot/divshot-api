@@ -211,7 +211,7 @@ var auth = function(callback) {
   }
   
   window.addEventListener('message', tokenListener);
-  var popup = window.open(authOrigin + "/authorize?grant_type=post_message&client_id=" + this.options.client_id, "divshotauth", "top=50,left=50,width=480,height=640,status=1,menubar=0,location=0,personalbar=0");
+  var popup = window.open(authOrigin + "/authorize?response_type=post_message&client_id=" + this.options.client_id, "divshotauth", "centerscreen=yes,chrome=yes,width=480,height=640,status=yes,menubar=no,location=no,personalbar=no");
   
   interval = window.setInterval(function() {
     try {
@@ -429,7 +429,8 @@ process.nextTick = (function () {
     if (canPost) {
         var queue = [];
         window.addEventListener('message', function (ev) {
-            if (ev.source === window && ev.data === 'process-tick') {
+            var source = ev.source;
+            if ((source === window || source === null) && ev.data === 'process-tick') {
                 ev.stopPropagation();
                 if (queue.length > 0) {
                     var fn = queue.shift();
@@ -1114,7 +1115,7 @@ if (typeof setImmediate === 'function') { // IE >= 10 & node.js >= 0.10
 }
 
 },{"__browserify_process":10}],21:[function(require,module,exports){
-/*! version: 0.9.6
+/*! version: 0.9.7
   * Reqwest! A general purpose XHR connection manager
   * license MIT (c) Dustin Diaz 2013
   * https://github.com/ded/reqwest
@@ -1311,7 +1312,10 @@ if (typeof setImmediate === 'function') { // IE >= 10 & node.js >= 0.10
 
     if (o['type'] == 'jsonp') return handleJsonp(o, fn, err, url)
 
-    http = xhr(o)
+    // get the xhr from the factory if passed
+    // if the factory returns null, fall-back to ours
+    http = (o.xhr && o.xhr(o)) || xhr(o)
+
     http.open(method, url, o['async'] === false ? false : true)
     setHeaders(http, o)
     setCredentials(http, o)

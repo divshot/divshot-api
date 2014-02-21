@@ -211,7 +211,7 @@ var auth = function(callback) {
   }
   
   window.addEventListener('message', tokenListener);
-  var popup = window.open(authOrigin + "/authorize?grant_type=post_message&client_id=" + this.options.client_id, "divshotauth", "top=50,left=50,width=480,height=640,status=1,menubar=0,location=0,personalbar=0");
+  var popup = window.open(authOrigin + "/authorize?response_type=post_message&client_id=" + this.options.client_id, "divshotauth", "centerscreen=yes,chrome=yes,width=480,height=640,status=yes,menubar=no,location=no,personalbar=no");
   
   interval = window.setInterval(function() {
     try {
@@ -461,7 +461,8 @@ process.nextTick = (function () {
     if (canPost) {
         var queue = [];
         window.addEventListener('message', function (ev) {
-            if (ev.source === window && ev.data === 'process-tick') {
+            var source = ev.source;
+            if ((source === window || source === null) && ev.data === 'process-tick') {
                 ev.stopPropagation();
                 if (queue.length > 0) {
                     var fn = queue.shift();

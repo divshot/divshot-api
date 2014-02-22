@@ -196,23 +196,6 @@ var auth = function(callback, options) {
   var client = this;
   var interval = null;
   
-  // Look for a Divshot authentication cookie already set on this domain
-  if (options.cookie) {
-    var cookie = querystring.decode(document.cookie, '; ');
-    
-    if (cookie['__dsat']) {
-      var token = atob(cookie['__dsat']);
-      client.setToken(token);
-      client.user.self().then(function(user) {
-        callback(null, user, token);
-      }, function(err) {
-        callback(JSON.parse(err.responseText));
-      });
-      
-      return null;
-    }
-  }
-  
   var tokenListener = function(e) {
     if (e.origin == authOrigin) {
       if (interval){ window.clearInterval(interval); }
@@ -260,7 +243,23 @@ var auth = function(callback, options) {
   return child; // TODO: Make this a promise
 }
 
-module.exports = auth;
+var cookie = function() {
+  var cookie = querystring.decode(document.cookie, '; ');
+  var client = this;
+  
+  if (cookie['__dsat']) {
+    var token = atob(cookie['__dsat']);
+    client.setToken(token);
+    return true;
+  } else {
+    return false;
+  }
+}
+
+module.exports = {
+  auth: auth,
+  authWithCookie: cookie
+};
 },{"../Divshot.js":1,"querystring":13}],4:[function(require,module,exports){
 angular.module('divshot', [])
   .provider('divshot', function () {

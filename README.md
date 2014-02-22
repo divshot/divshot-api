@@ -73,6 +73,30 @@ api.auth(function(error, user, token) {
 });
 ```
 
+#### Cookie Token Storage
+
+For convenience, the `auth` method allows you to store a cookie with an encoded access token
+to keep the user logged into Divshot. Simply pass the `store: true` option to `auth`:
+
+```js
+api.auth(function(error, token, user){
+  // ...
+}, {store: true});
+```
+
+This will automatically create a cookie on the current domain to store the access token for one
+week. On subsequent page loads you can use the `authWithCookie()` method to authenticate a client
+based on the cookie. This method will return `true` if a cookie was found and `false` otherwise.
+
+```js
+if (api.authWithCookie()) {
+  // cookie found, api is now authenticated and can
+  // make calls to retrieve protected resources
+} else {
+  // no cookie found, display auth button etc
+}
+```
+
 ###Angular Module
 
 Located at ` /dist/divshot.angular.js `

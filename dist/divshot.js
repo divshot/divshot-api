@@ -205,6 +205,9 @@ var auth = function(callback, options) {
         callback(data, null, null);
       } else {
         client.setToken(data.token);
+        if (options.store) {
+          document.cookie = "__dsat=" + btoa(data.token) + ";max-age=" + (60 * 60 * 24 * 7).toString();
+        }
         callback(null, data.user, data.access_token);
       }
       

@@ -190,6 +190,8 @@ var querystring = require('querystring');
 
 var auth = function(callback, options) {
   var options = options || {};
+  options.mode = options.mode || 'popup';
+  
   var authOrigin = this.options.auth_origin || 'https://auth.divshot.com';
   var client = this;
   var interval = null;
@@ -223,25 +225,39 @@ var auth = function(callback, options) {
         callback(null, data.user, data.access_token);
       }
       
-      window.removeEventListener('message', tokenListener);
-      if (popup) { popup.close() };
+      if (child && child.close) { child.close(); }
     }
     return true;
   }
   
   window.addEventListener('message', tokenListener);
-  var popup = window.open(authOrigin + "/authorize?response_type=post_message&client_id=" + this.options.client_id, "divshotauth", "centerscreen=yes,chrome=yes,width=480,height=640,status=yes,menubar=no,location=no,personalbar=no");
   
+  var authorizeUrl = authOrigin + "/authorize?response_type=post_message&client_id=" + this.options.client_id
+  if (options.provider) { authorizeUrl += "&provider=" + options.provider; }
+  
+  var child;
+  if (options.mode == 'iframe') {
+    child = document.createElement('iframe');
+    child.className = 'divshot-auth-frame';
+    child.src = authorizeUrl;
+    child.width = 480;
+    child.height = 640;
+  } else if (options.mode == 'popup') {
+    child = window.open(authorizeUrl, "divshotauth", "centerscreen=yes,chrome=yes,width=480,height=640,status=yes,menubar=no,location=no,personalbar=no");
+  } else {
+    throw "Unknown auth mode. Must be 'iframe' or 'popup'";
+  }
+    
   interval = window.setInterval(function() {
     try {
-      if (!popup || popup == null || popup.closed) {
+      if (!child || child == null || child.closed) {
         window.clearInterval(interval);
         callback({error: 'access_denied', error_description: 'The user closed the authentication window before the process was completed.'}, null);
       }
     } catch (e) {}
   }, 500);
   
-  return null; // TODO: Make this a promise
+  return child; // TODO: Make this a promise
 }
 
 module.exports = auth;

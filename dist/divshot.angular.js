@@ -192,7 +192,7 @@ var auth = function(callback, options) {
   var options = options || {};
   options.mode = options.mode || 'popup';
   
-  var authOrigin = this.options.auth_origin || 'https://auth.divshot.com';
+  var authOrigin = options.auth_origin || 'https://auth.divshot.com';
   var client = this;
   var interval = null;
   
@@ -218,7 +218,7 @@ var auth = function(callback, options) {
   
   window.addEventListener('message', tokenListener);
   
-  var authorizeUrl = authOrigin + "/authorize?response_type=post_message&client_id=" + this.options.client_id
+  var authorizeUrl = authOrigin + "/authorize?response_type=post_message&client_id=" + options.client_id
   if (options.provider) { authorizeUrl += "&provider=" + options.provider; }
   
   var child;
@@ -271,8 +271,9 @@ angular.module('divshot', [])
     var Http = require('narrator').Http;
     var asQ = require('narrator/lib/browser/asQ');
     var asHttp = require('narrator/lib/browser/asHttp');
-    
-    Divshot.prototype.auth = require('./auth.js');
+
+    Divshot.prototype.auth = auth.auth;
+    Divshot.prototype.authWithCookie = auth.authWithCookie;
     
     return {
       _options: {},

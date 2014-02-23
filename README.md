@@ -59,17 +59,32 @@ The Divshot API wrapper provides a simple, popup-based authentication mechanism 
 easily authenticating a user without requiring the handling of usernames or passwords.
 To use browser authentication, simply instantiate a client and call the `auth` method:
 
+**divshot.auth(type, options, callback)**
+
+This method returns a promise but takes an optional callback. `type` should be either
+`password` or `github` (defaults to `password`).
+
 ```js
 var api = Divshot.createClient({client_id: 'abc123'});
-api.auth(function(error, user, token) {
-  if (error) {
-    // something has gone wrong with the auth process, handle it here
-  } else {
-    // you can now operate as if the client is authenticated. also,
-    // 'user' argument will be populated with basic user information
-    // and 'token' parameter will contain the access token for storage
-    // or other use
-  }
+
+divshot.auth().then(function(response) {
+  response.user; // user details
+  response.access_token; //access token
+}, function (error) {
+  // do something with an error
+});
+```
+
+#### Password Authentication
+
+If you need to accept an email and password directly, you can do so as in the following example.
+Passwords **MUST NOT** be stored and should only come from direct user input (e.g. a form field).
+
+```js
+divshot.auth('password', {email: 'abby@example.com', password: 'test123'}).then(function(response) {
+  // works just as above
+}, function (error) {
+  // ditto
 });
 ```
 
@@ -79,9 +94,9 @@ For convenience, the `auth` method allows you to store a cookie with an encoded 
 to keep the user logged into Divshot. Simply pass the `store: true` option to `auth`:
 
 ```js
-api.auth(function(error, token, user){
+api.auth({store: true}, function(error, token, user){
   // ...
-}, {store: true});
+});
 ```
 
 This will automatically create a cookie on the current domain to store the access token for one
@@ -93,7 +108,7 @@ if (api.authWithCookie()) {
   // cookie found, api is now authenticated and can
   // make calls to retrieve protected resources
 } else {
-  // no cookie found, display auth button etc
+  // no cookie found, display an auth button etc
 }
 ```
 

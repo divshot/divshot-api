@@ -323,8 +323,9 @@ angular.module('divshot', [])
     var Http = require('narrator').Http;
     var asQ = require('narrator/lib/browser/asQ');
     var asHttp = require('narrator/lib/browser/asHttp');
-    
-    Divshot.prototype.auth = require('./auth.js');
+
+    Divshot.prototype.auth = auth.auth;
+    Divshot.prototype.authWithCookie = auth.authWithCookie;
     
     return {
       _options: {},

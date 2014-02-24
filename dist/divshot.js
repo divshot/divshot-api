@@ -192,7 +192,7 @@ var passwordAuth = function (options) {
   var options = options;
   
   // var promise = new Promise(function(resolve, reject) {
-  var promise = client.createPromise(function(resolve, reject) {
+  var promise = client._api.createPromise(function(resolve, reject) {
     // Fetch a token using resource owner password credential method
     client.user.http.request(client.user.options.host + '/token', 'POST', {
       form: {
@@ -227,7 +227,7 @@ var passwordAuth = function (options) {
 var popupAuth = function(options) {
   var client = this;
   
-  var promise = client.createPromise(function(resolve, reject) {
+  var promise = client._api.createPromise(function(resolve, reject) {
     var authOrigin = client.options.auth_origin || 'https://auth.divshot.com';
     var interval = null;
     

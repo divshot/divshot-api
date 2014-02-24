@@ -192,7 +192,7 @@ var passwordAuth = function (options) {
   var options = options;
   
   // var promise = new Promise(function(resolve, reject) {
-  var promise = client.http._promiseWrap(function(resolve, reject) {
+  var promise = client.createPromise(function(resolve, reject) {
     // Fetch a token using resource owner password credential method
     client.user.http.request(client.user.options.host + '/token', 'POST', {
       form: {
@@ -227,7 +227,7 @@ var passwordAuth = function (options) {
 var popupAuth = function(options) {
   var client = this;
   
-  var promise = client.http._promiseWrap(function(resolve, reject) {
+  var promise = client.createPromise(function(resolve, reject) {
     var authOrigin = client.options.auth_origin || 'https://auth.divshot.com';
     var interval = null;
     
@@ -3139,7 +3139,8 @@ process.nextTick = (function () {
     if (canPost) {
         var queue = [];
         window.addEventListener('message', function (ev) {
-            if (ev.source === window && ev.data === 'process-tick') {
+            var source = ev.source;
+            if ((source === window || source === null) && ev.data === 'process-tick') {
                 ev.stopPropagation();
                 if (queue.length > 0) {
                     var fn = queue.shift();
@@ -3519,6 +3520,11 @@ var Narrator = module.exports = function (options) {
   this.host = '/';
   
   extend(this, options);
+  
+  // FIXME: This is a hacky to expose some features
+  var http = this.endpoint('').http;
+  this._request = http._http;
+  this.createPromise = http._promiseWrap;
 };
 
 Narrator.Http = require('./http');

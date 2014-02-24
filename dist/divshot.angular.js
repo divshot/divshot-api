@@ -187,65 +187,135 @@ module.exports = function (api, divshot) {
 },{"./user":9}],3:[function(require,module,exports){
 var Divshot = require('../Divshot.js');
 var querystring = require('querystring');
+var Promise = require('promise');
 
-var auth = function(callback, options) {
-  var options = options || {};
-  var authOrigin = this.options.auth_origin || 'https://auth.divshot.com';
+var passwordAuth = function (options) {
   var client = this;
-  var interval = null;
+  var options = options;
   
-  // Look for a Divshot authentication cookie already set on this domain
-  if (options.cookie) {
-    var cookie = querystring.decode(document.cookie, '; ');
-    
-    if (cookie['__dsat']) {
-      var token = atob(cookie['__dsat']);
-      client.setToken(token);
-      client.user.self().then(function(user) {
-        callback(null, user, token);
-      }, function(err) {
-        callback(JSON.parse(err.responseText));
-      });
-      
-      return null;
-    }
-  }
-  
-  var tokenListener = function(e) {
-    if (e.origin == authOrigin) {
-      if (interval){ window.clearInterval(interval); }
-      
-      var data = e.data;
-      if (data.error) {
-        callback(data, null, null);
+  var promise = new Promise(function(resolve, reject) {
+    // Fetch a token using resource owner password credential method
+    client.user.http.request(client.user.options.host + '/token', 'POST', {
+      form: {
+        username: options.email,
+        password: options.password,
+        grant_type: 'password'
+      },
+      headers: {
+        Authorization: 'Basic ' + btoa(client.options.client_id + ":")
+      }
+    }, function (err, response, body) {
+      if (err) {
+        try {
+          reject(JSON.parse(err.responseText));
+        } catch(e) {
+          reject({
+            error: 'unknown_error',
+            error_description: err.responseText
+          });
+        }
+      } else if (body.error) {
+        reject(body);
       } else {
-        client.setToken(data.token);
-        callback(null, data.user, data.access_token);
+        resolve(body);
       }
-      
-      window.removeEventListener('message', tokenListener);
-      if (popup) { popup.close() };
-    }
-    return true;
-  }
+    });
+  });
   
-  window.addEventListener('message', tokenListener);
-  var popup = window.open(authOrigin + "/authorize?response_type=post_message&client_id=" + this.options.client_id, "divshotauth", "centerscreen=yes,chrome=yes,width=480,height=640,status=yes,menubar=no,location=no,personalbar=no");
-  
-  interval = window.setInterval(function() {
-    try {
-      if (!popup || popup == null || popup.closed) {
-        window.clearInterval(interval);
-        callback({error: 'access_denied', error_description: 'The user closed the authentication window before the process was completed.'}, null);
-      }
-    } catch (e) {}
-  }, 500);
-  
-  return null; // TODO: Make this a promise
+  return promise;
 }
 
-module.exports = auth;
-},{"../Divshot.js":1,"querystring":13}],4:[function(require,module,exports){
+var popupAuth = function(options) {
+  var client = this;
+  
+  var promise = new Promise(function(resolve, reject) {
+    var authOrigin = client.options.auth_origin || 'https://auth.divshot.com';
+    var interval = null;
+    
+    var tokenListener = function(e) {
+      if (e.origin === authOrigin) {
+        if (interval){ window.clearInterval(interval); }
+        
+        var data = e.data;
+        
+        if (data.error) reject(data);
+        else resolve(data);
+        
+        if (child && child.close) child.close();
+      }
+      
+      return true;
+    }
+    
+    window.addEventListener('message', tokenListener);
+    
+    var authorizeUrl = authOrigin + "/authorize?response_type=post_message&client_id=" + client.options.client_id
+    if (options.provider) { authorizeUrl += "&provider=" + options.provider; }
+
+    var child = window.open(authorizeUrl, "divshotauth", "centerscreen=yes,chrome=yes,width=480,height=640,status=yes,menubar=no,location=no,personalbar=no");
+      
+    interval = window.setInterval(function() {
+      try {
+        if (!child || child == null || child.closed) {
+          window.clearInterval(interval);
+          callback({error: 'access_denied', error_description: 'The user closed the authentication window before the process was completed.'}, null);
+        }
+      } catch (e) {}
+    }, 500);
+  });
+  
+  return promise; // TODO: Make this a promise
+}
+
+
+var auth = function() {
+  var callback, options, provider, promise;
+  var client = this;
+  
+  for (var i = 0; i < arguments.length; i++) {
+    if (typeof arguments[i] === 'object'){ options = arguments[i] }
+    else if (typeof arguments[i] === 'string'){ provider = arguments[i] }
+    else if (typeof arguments[i] === 'function'){ callback = arguments[i] }
+  }
+  
+  options = options || {}
+  
+  if (provider === 'password' && options.email && options.password) {
+    promise = passwordAuth.call(client, options);
+  } else {
+    options.provider = provider;
+    promise = popupAuth.call(client, options);
+  }
+  
+  promise.then(function(res) {
+    if (callback) callback(null, res);
+    if (options.store) document.cookie = "__dsat=" + btoa(res.access_token) + ";max-age=" + (60 * 60 * 24 * 7).toString();
+    client.setToken(res.access_token);
+  }, function(err) {
+    if (callback) callback(err);  
+  });
+  
+  return promise;
+}
+
+var cookie = function() {
+  var cookie = querystring.decode(document.cookie, '; ');
+  var client = this;
+  
+  if (cookie['__dsat']) {
+    var token = atob(cookie['__dsat']);
+    client.setToken(token);
+    return true;
+  } else {
+    return false;
+  }
+}
+
+module.exports = {
+  auth: auth,
+  authWithCookie: cookie
+};
+},{"../Divshot.js":1,"promise":10,"querystring":13}],4:[function(require,module,exports){
 angular.module('divshot', [])
   .provider('divshot', function () {
     var Divshot = require('../Divshot');
@@ -253,8 +323,9 @@ angular.module('divshot', [])
     var Http = require('narrator').Http;
     var asQ = require('narrator/lib/browser/asQ');
     var asHttp = require('narrator/lib/browser/asHttp');
-    
-    Divshot.prototype.auth = require('./auth.js');
+
+    Divshot.prototype.auth = auth.auth;
+    Divshot.prototype.authWithCookie = auth.authWithCookie;
     
     return {
       _options: {},

@@ -185,15 +185,14 @@ module.exports = function (api, divshot) {
   return apps;
 };
 },{"./user":9}],3:[function(require,module,exports){
-var Divshot = require('../Divshot.js');
 var querystring = require('querystring');
-var Promise = require('promise');
 
 var passwordAuth = function (options) {
   var client = this;
   var options = options;
   
-  var promise = new Promise(function(resolve, reject) {
+  // var promise = new Promise(function(resolve, reject) {
+  var promise = this.client.http._promiseWrap(function(resolve, reject) {
     // Fetch a token using resource owner password credential method
     client.user.http.request(client.user.options.host + '/token', 'POST', {
       form: {
@@ -228,7 +227,7 @@ var passwordAuth = function (options) {
 var popupAuth = function(options) {
   var client = this;
   
-  var promise = new Promise(function(resolve, reject) {
+  var promise = this.client.http._promiseWrap(function(resolve, reject) {
     var authOrigin = client.options.auth_origin || 'https://auth.divshot.com';
     var interval = null;
     
@@ -315,7 +314,7 @@ module.exports = {
   auth: auth,
   authWithCookie: cookie
 };
-},{"../Divshot.js":1,"promise":10,"querystring":13}],4:[function(require,module,exports){
+},{"querystring":13}],4:[function(require,module,exports){
 angular.module('divshot', [])
   .provider('divshot', function () {
     var Divshot = require('../Divshot');

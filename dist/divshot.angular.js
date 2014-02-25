@@ -7,7 +7,7 @@ var builds = require('./builds');
 var releases = require('./releases');
 var organizations = require('./organizations');
 
-var DIVSHOT_API_VERSION = '0.4.0';
+var DIVSHOT_API_VERSION = '0.5.0';
 
 var Divshot = function (options) {
   this.defaults = {};
@@ -20,9 +20,9 @@ var Divshot = function (options) {
   
   if (process.env.DIVSHOT_API_VERSION || options.version || DIVSHOT_API_VERSION) {
     var version = process.env.DIVSHOT_API_VERSION || options.version || DIVSHOT_API_VERSION;
-    apiOptions.headers['Accepts'] = 'application/vnd.divshot-' + version + '+json'
+    apiOptions.headers['Accept-Version'] = version
   }
-  
+
   if (options.token) {
     apiOptions.headers['authorization'] = 'Bearer ' + options.token
   }
@@ -3139,8 +3139,7 @@ process.nextTick = (function () {
     if (canPost) {
         var queue = [];
         window.addEventListener('message', function (ev) {
-            var source = ev.source;
-            if ((source === window || source === null) && ev.data === 'process-tick') {
+            if (ev.source === window && ev.data === 'process-tick') {
                 ev.stopPropagation();
                 if (queue.length > 0) {
                     var fn = queue.shift();

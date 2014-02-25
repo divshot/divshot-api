@@ -19,8 +19,17 @@ Wrapper for the Divshot API.
 
 ## Install
 
+NPM
+
 ```
-npm install divshot --save
+npm install divshot-api --save
+```
+
+Bower
+
+
+```
+bower install divshot --save
 ```
 
 ## Usage

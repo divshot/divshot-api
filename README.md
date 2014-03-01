@@ -1,4 +1,4 @@
-# Divshot Api
+# Divshot API
 
 Wrapper for the Divshot API. 
 
@@ -227,6 +227,16 @@ divshot.organizations.id(someOrgId).get().then(function (org) {
 
 // Apps from an organization
 divshot.organizations.id(someOrgId).apps.list().then(function (apps) {
+  
+});
+
+// Create organization
+divshot.organizations.create({
+  name: 'name',
+  nick: 'nick',
+  billing_email: 'someone@aol.com',
+  gravatar_email: 'someone@aol.com'
+}).then(function (res) {
   
 });
 

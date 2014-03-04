@@ -3108,7 +3108,8 @@ process.nextTick = (function () {
     if (canPost) {
         var queue = [];
         window.addEventListener('message', function (ev) {
-            if (ev.source === window && ev.data === 'process-tick') {
+            var source = ev.source;
+            if ((source === window || source === null) && ev.data === 'process-tick') {
                 ev.stopPropagation();
                 if (queue.length > 0) {
                     var fn = queue.shift();
@@ -3506,6 +3507,18 @@ Narrator.prototype.endpoint = function (path, userDefined) {
   return this._endpoints[pathKey];
 };
 
+// Add support for special xhr cases
+Narrator.prototype._xhr = {};
+
+Narrator.prototype.withCredentials = function (_withCreds) {
+  this.xhr('withCredentials', _withCreds);
+  return this;
+};
+
+Narrator.prototype.xhr = function (key, value) {
+  this._xhr[key] = value;
+  return this;
+};
 },{"./endpoint":19,"./http":22,"extend":24,"promise":26,"url-join":29}],24:[function(require,module,exports){
 var hasOwn = Object.prototype.hasOwnProperty;
 var toString = Object.prototype.toString;

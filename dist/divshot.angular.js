@@ -3139,7 +3139,8 @@ process.nextTick = (function () {
     if (canPost) {
         var queue = [];
         window.addEventListener('message', function (ev) {
-            if (ev.source === window && ev.data === 'process-tick') {
+            var source = ev.source;
+            if ((source === window || source === null) && ev.data === 'process-tick') {
                 ev.stopPropagation();
                 if (queue.length > 0) {
                     var fn = queue.shift();
@@ -3178,6 +3179,9 @@ process.chdir = function (dir) {
 module.exports = function (Http, $http) {
   Http.prototype._request = function (options, callback) {
     options.data = options.data || options.form;
+    
+    // Add any special xhr fields
+    angular.extend(options, this.options.context.options.api._xhr);
     
     $http(options)
       .success(function (data) {
@@ -3550,6 +3554,18 @@ Narrator.prototype.endpoint = function (path, userDefined) {
   return this._endpoints[pathKey];
 };
 
+// Add support for special xhr cases
+Narrator.prototype._xhr = {};
+
+Narrator.prototype.withCredentials = function (_withCreds) {
+  this.xhr('withCredentials', _withCreds);
+  return this;
+};
+
+Narrator.prototype.xhr = function (key, value) {
+  this._xhr[key] = value;
+  return this;
+};
 },{"./endpoint":21,"./http":24,"extend":26,"promise":10,"url-join":27}],26:[function(require,module,exports){
 var hasOwn = Object.prototype.hasOwnProperty;
 var toString = Object.prototype.toString;

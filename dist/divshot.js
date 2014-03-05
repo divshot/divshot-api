@@ -27,7 +27,13 @@ var Divshot = function (options) {
     apiOptions.headers['authorization'] = 'Bearer ' + options.token
   }
   
+  if (options.session) {
+    apiOptions.headers['authorization'] = 'Session ' + options.client_id;
+  }
+  
   this._api = new Narrator(apiOptions);
+  if (options.session){ this._api.withCredentials(true); }
+  
   this.user = user(this._api, this, options);
   this.apps = apps(this._api, this);
   this.builds = builds(this._api, this);

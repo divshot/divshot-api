@@ -66,7 +66,7 @@ module.exports = function (api, divshot) {
     hooks: {
       pre: function (next) {
         this.getEndpoint('users').authenticate(function (err, token) {
-          divshot.setTokenHeader(token, apps);
+          if (token) divshot.setTokenHeader(token, apps);
           next();
         });
       },
@@ -366,7 +366,7 @@ module.exports = function (api, divshot) {
     hooks: {
       pre: function (next) {
         this.getEndpoint('users').authenticate(function (err, token) {
-          divshot.setTokenHeader(token, builds);
+          if (token) divshot.setTokenHeader(token, builds);
           next();
         });
       }
@@ -406,7 +406,7 @@ module.exports = function (api, divshot) {
     hooks: {
       pre: function (next) {
         this.getEndpoint('users').authenticate(function (err, token) {
-          divshot.setTokenHeader(token, organizations);
+          if (token) divshot.setTokenHeader(token, organizations);
           next();
         });
       },
@@ -491,9 +491,8 @@ module.exports = function (api, divshot, credentials) {
     authenticate: function (callback) {
       var self = this;
       
-      if (this.credentials.token) {
-        return callback(null, this.credentials.token);
-      }
+      if (this.credentials.token) return callback(null, this.credentials.token);
+      if (this.credentials.session) return callback(null);
       
       return this.http._http(this.options.host + '/token', 'POST', {
         form: {

@@ -139,6 +139,24 @@ angular.module('myApp', ['divshot'])
   });
 ```
 
+#### Custom XHR arguments
+
+Custom XHR arguments can be set to be sent with each request. Refer to Angular's [$http](http://docs.angularjs.org/api/ng/service/$http#usage) documentation for which arguments are supported.
+
+```js
+angular.module('myApp', ['divshot'])
+  .config(function (divshotProvider) {
+    divshotProvider.configure({
+      token: 'divshot_api_access_token'
+    });
+  }).
+  controller('SomeCtrl', function ($scope, divshot) {
+    divshot.withCredentials(true);
+    // or
+    divshot.xhr('withCredentials', true);
+  });
+```
+
 ###User
 
 By default, the ` authenticate ` method will be called on each request as a pre hook. If a token is provided, this does not create another http request.

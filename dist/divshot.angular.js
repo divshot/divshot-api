@@ -32,6 +32,7 @@ var Divshot = function (options) {
   }
   
   this._api = new Narrator(apiOptions);
+  
   if (options.session){ this._api.withCredentials(true); }
   
   this.user = user(this._api, this, options);

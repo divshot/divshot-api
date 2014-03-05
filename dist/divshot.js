@@ -32,6 +32,7 @@ var Divshot = function (options) {
   }
   
   this._api = new Narrator(apiOptions);
+  
   if (options.session){ this._api.withCredentials(true); }
   
   this.user = user(this._api, this, options);
@@ -3152,10 +3153,14 @@ process.chdir = function (dir) {
 
 },{}],18:[function(require,module,exports){
 var request = require('reqwest');
+var extend = require('extend');
 
 module.exports = function (options, callback) {
   options.data = options.form;
   options.type = options.type || 'json';
+  
+  // Add extra xhr arguments
+  extend(options, this.options.context.options.api._xhr);
   
   options.error = function (response) {
     callback(response);
@@ -3169,7 +3174,7 @@ module.exports = function (options, callback) {
   
   return request(options);
 };
-},{"reqwest":28}],19:[function(require,module,exports){
+},{"extend":24,"reqwest":28}],19:[function(require,module,exports){
 var defaults = require('./helpers/defaults');
 var extend = require('extend');
 var urljoin = require('url-join');

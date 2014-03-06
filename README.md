@@ -204,6 +204,11 @@ divshot.user.password.update({
 }).then(function (res) {
   
 });
+
+// Reset password if forgotten
+divshot.password.reset(userId).then(function (res) {
+  
+});
 ```
 
 #### User Emails

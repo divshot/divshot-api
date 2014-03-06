@@ -476,7 +476,11 @@ module.exports = function (api, divshot, credentials) {
     }
   });
   
-  var password = api.endpoint('self').one('password');
+  var password = api.endpoint('self').one('password', {
+    reset: function (userId, callback) {
+      return this.http.reqeust(this.options.host = '/actions/reset_password/' + userId, 'POST', callback);
+    }
+  });
   
   var user = api.endpoint('users', {
     credentials: credentials,
@@ -528,9 +532,7 @@ module.exports = function (api, divshot, credentials) {
     
     self: function (callback) {
       return this.http.request(this.options.host + '/self', 'GET', callback);
-    },
-    
-    
+    }
   });
 
   return user;

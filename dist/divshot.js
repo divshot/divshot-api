@@ -189,7 +189,7 @@ module.exports = function (api, divshot) {
     },
     
     createFromObject: function (payload, callback) {
-      return this.http.request(this.url(), 'POST', payload, callback);
+      return this.http.request(this.url(), 'POST', {form:payload}, callback);
     }
   });
   
@@ -3120,8 +3120,7 @@ process.nextTick = (function () {
     if (canPost) {
         var queue = [];
         window.addEventListener('message', function (ev) {
-            var source = ev.source;
-            if ((source === window || source === null) && ev.data === 'process-tick') {
+            if (ev.source === window && ev.data === 'process-tick') {
                 ev.stopPropagation();
                 if (queue.length > 0) {
                     var fn = queue.shift();

@@ -186,6 +186,10 @@ module.exports = function (api, divshot) {
           name: name
         }
       }, callback);
+    },
+    
+    createFromObject: function (payload, callback) {
+      return this.http.request(this.url(), 'POST', payload, callback);
     }
   });
   

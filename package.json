@@ -28,6 +28,7 @@
     "async": "0.2.x",
     "narrator": "0.6.x",
     "promise": "4.0.x",
-    "rapper": "0.7.x"
+    "rapper": "0.7.x",
+    "url-join": "0.0.1"
   }
 }

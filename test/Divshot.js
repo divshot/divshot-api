@@ -1,63 +1,76 @@
-var expect = require('chai').expect;
-var sinon = require('sinon');
 var Divshot = require('../lib/divshot');
-var userData = require('./fixtures/user_data');
-var User = require('../lib/user');
-var Apps = require('../lib/apps');
+var lab = require('lab');
+var describe = lab.describe;
+var it = lab.it;
+var expect = lab.expect;
+var beforeEach = lab.beforeEach;
+var afterEach = lab.afterEach;
 
-describe('Divshot', function() {
+describe('divshot api wrapper set up', function () {
   var divshot;
   
-  beforeEach(function () {
-    divshot = createClient();
+  beforeEach(function (done) {
+    divshot = new Divshot();
+    done();
   });
   
-  afterEach(function () {
-    divshot = null;
+  it('sets the token', function (done) {
+    divshot.token('token');
+    expect(divshot.token()).to.equal('token');
+    done();
   });
   
-  it('creates and instance of Divshot', function () {
-    expect(divshot instanceof Divshot).to.be.ok;
+  it('sets the token header when the token is set', function (done) {
+    divshot.token('token');
+    expect(divshot.header('Authorization')).to.equal('Bearer token');
+    done();
   });
   
-  it('sets defaults', function () {
-    expect(divshot.options.email).to.equal(userData.email);
-    expect(divshot.options.password).to.equal(userData.password);
+  it('overrides the host', function (done) {
+    divshot.host('host');
+    expect(divshot.host()).to.equal('host');
+    done();
   });
   
-  it('accepts a token and ignores email and password', function () {
-    var d = Divshot.createClient({
-      token: 'token'
-    });
-    
-    expect(d.options.token).to.equal('token');
+  it('sets the client id on the session header', function (done) {
+    divshot.session('client_id');
+    expect(divshot.header('Authorization')).to.equal('Session client_id');
+    expect(divshot.clientId()).to.equal('client_id');
+    done();
   });
   
-  it('instantiates a user', function () {
-    expect(divshot.user instanceof User).to.be.ok;
+  it('forces CORS with credentials if session is set', function (done) {
+    divshot.session('client_id');
+    expect(divshot.xhr('withCredentials')).to.equal(true);
+    done();
   });
   
-  it('instantiates the app endpoint', function () {
-    expect(divshot.apps instanceof Apps).to.be.ok;
+  it('has a default api version of 0.5.0', function (done) {
+    expect(divshot.apiVersion()).to.equal('0.5.0');
+    done();
   });
   
-  it('can set the Api end point on instantiation', function () {
-    var CUSTOM_HOST = 'http://customhost.com';
-    
-    var d = Divshot.createClient({
-      email: userData.email,
-      password: userData.password,
-      host: CUSTOM_HOST
-    });
-    
-    expect(d.Api.HOST).to.equal(CUSTOM_HOST);
+  it('sets a custom api version', function (done) {
+    divshot.apiVersion('0.6.0');
+    expect(divshot.apiVersion()).to.equal('0.6.0');
+    done();
+  });
+  
+  it('sets the default api version from the environment', function (done) {
+    process.env.DIVSHOT_API_URL = '0.6.0';
+    var divshot = new Divshot();
+    expect(divshot.apiVersion()).to.equal('0.6.0');
+    done();
+  });
+  
+  it('sets the version header for all http requests', function (done) {
+    expect(divshot.header('Accepts-Version')).to.equal(divshot.apiVersion());
+    done();
   });
   
 });
 
-function createClient () {
-  return Divshot.createClient({
-    email: userData.email,
-    password: userData.password
-  });
+function requireNoCache (pathname) {
+  delete require.cache[pathname];
+  return require(pathname);
 }

@@ -41,72 +41,92 @@ test('apps', function (t) {
     });
     
     // domains
-    
-    t.test('gets a list of domains for a given app id', function (t) {
+    t.test('domains', function (t) {
+      t.plan(5);
+      
       app.domains.list().then(function (res) {
-        t.equal(res.url, '/apps/123/domains', 'url');
-        t.end();
+        t.equal(res.url, '/apps/123/domains', 'gets a list of domains for a given app id');
       });
-    });
-    
-    t.test('adds a domain', function (t) {
+      
       app.domains.add('www.divshot.com').then(function (res) {
-        t.equal(res.url, '/apps/123/domains/www.divshot.com', 'url');
-        t.equal(res.method, 'PUT', 'method');
-        t.end();
+        t.equal(res.url, '/apps/123/domains/www.divshot.com', 'url for adding a domain');
+        t.equal(res.method, 'PUT', 'method for adding a domain');
       });
-    });
-    
-    t.test('removes a domain', function (t) {
+      
       app.domains.remove('www.divshot.com').then(function (res) {
-        t.equal(res.url, '/apps/123/domains/www.divshot.com', 'url');
-        t.equal(res.method, 'DELETE', 'method');
-        t.end();
+        t.equal(res.url, '/apps/123/domains/www.divshot.com', 'url for removing domain');
+        t.equal(res.method, 'DELETE', 'method for removing domain');
       });
     });
     
     // environments
-    
-    t.test('updates an apps configuration', function (t) {
+    t.test('update s an apps configuration', function (t) {
+      t.plan(3);
+      
       app.env('production').configure({
         name: 'name'
       }).then(function (res) {
         t.equal(res.url, '/apps/123/env/production/config', 'url');
         t.deepEqual(res.body, {name: 'name'}, 'body');
         t.equal(res.method, 'PUT', 'method');
-        t.end();
       });
     });
     
-    // builds
+    t.test('builds', function (t) {
+      t.plan(5);
     
-    t.test('gets a single build by id', function (t) {
       app.builds.id(456).get().then(function (res) {
-        t.equal(res.url, '/apps/123/builds/456', 'url');
-        t.end();
+        t.equal(res.url, '/apps/123/builds/456', 'gets a single build by id');
       });
-    });
     
-    t.test('finalizes a build for a given app', function (t) {
       app.builds.finalize(456).then(function (res) {
-        t.equal(res.url, '/apps/123/builds/456/finalize', 'url');
-        t.end();
+        t.equal(res.url, '/apps/123/builds/456/finalize', 'finalizes a build for a given app');
       });
-    });
     
-    t.test('releases an environment for a given app', function (t) {
       app.builds.id(789).release('production').then(function (res) {
-        t.equal(res.url, '/apps/123/releases/production', 'url');
-        t.equal(res.method, 'POST', 'method');
-        t.deepEqual(res.body, {build: '789'}, 'body');
-        t.end();
+        t.equal(res.url, '/apps/123/releases/production', 'released to production url');
+        t.equal(res.method, 'POST', 'released to production method');
+        t.deepEqual(res.body, {build: '789'}, 'released to production body');
       });
     });
     
-    // releases
-    
+    t.test('releases', function (t) {
+      t.plan(9);
+      
+      app.releases.list().then(function (res) {
+        t.equal(res.url, '/apps/123/releases', 'release url')
+      });
+      
+      app.releases.env('production').get().then(function (res) {
+        t.equal(res.url, '/apps/123/releases/production', 'release environment');
+        t.equal(res.method, 'GET', 'gets release by environment');
+      });
+      
+      app.releases.env('production').rollback().then(function (res) {
+        t.equal(res.url, '/apps/123/releases/production/rollback', 'rolls back a release by environment');
+        t.equal(res.method, 'POST', 'sends a POST request to rollback release');
+      });
+      
+      app.releases.env('production').rollback('123').then(function (res) {
+        t.deepEqual(res.body, {version: '123'}, 'rolls back to a given version number');
+      });
+      
+      app.releases.env('production').promote('staging').then(function (res) {
+        t.equal(res.url, '/apps/123/releases/production', 'url for promoting a release');
+        t.equal(res.method, 'POST', 'post request to promote a release')
+        t.deepEqual(res.body, {environment: 'staging'}, 'passes name of environment to promote');
+      });
+    });
     
     t.end();
+  });
+
+  t.test('gets all apps owned by an organization', function (t) {
+    divshot.apps.organization('123').then(function (res) {
+      t.equal(res.url, '/organizations/123/apps', 'url to get app list')
+      t.equal(res.method, 'GET', 'sends a get request');
+      t.end();
+    });
   });
 
   t.end();

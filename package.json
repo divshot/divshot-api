@@ -5,7 +5,7 @@
   "main": "lib/divshot.js",
   "scripts": {
     "build": "grunt build",
-    "test": "tapes test/**/*.js -s | tapes-format"
+    "test": "tapes test/**/*.js | tap-dot"
   },
   "repository": {
     "type": "git",
@@ -20,8 +20,9 @@
     "sinon": "1.7.x",
     "mocksy": "0.1.x",
     "tap-spec": "0.1.x",
-    "tapes": "0.3.x",
-    "faucet": "0.0.1"
+    "tapes": "0.4.x",
+    "faucet": "0.0.1",
+    "tap-dot": "0.1.x"
   },
   "dependencies": {
     "lodash.defaults": "2.2.x",

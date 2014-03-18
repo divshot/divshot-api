@@ -2,7 +2,7 @@ var Divshot = require('../lib/divshot');
 var test = require('tapes');
 
 test('divshot api wrapper set up', function (t) {
-  var divshot = new Divshot();
+  var divshot;
   
   t.beforeEach(function (t) {
     divshot = new Divshot();

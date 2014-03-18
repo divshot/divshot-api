@@ -1,7 +1,7 @@
 var Divshot = require('../lib/divshot');
-var suite = require('tapes');
+var test = require('tapes');
 
-suite('divshot api wrapper set up', function (t) {
+test('divshot api wrapper set up', function (t) {
   var divshot = new Divshot();
   
   t.beforeEach(function (t) {
@@ -40,7 +40,7 @@ suite('divshot api wrapper set up', function (t) {
     t.end();
   });
   
-  t.suite('versioning', function (t) {
+  t.test('versioning', function (t) {
     t.test('has a default api version of 0.5.0', function (t) {
       t.equal(divshot.apiVersion(), '0.5.0', 'has default');
       t.end();
@@ -63,6 +63,9 @@ suite('divshot api wrapper set up', function (t) {
       t.equal(divshot.header('Accepts-Version'), divshot.apiVersion(), 'set api version number');
       t.end();
     });
+    
+    t.end();
   });
   
+  t.end();
 });

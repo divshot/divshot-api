@@ -5,7 +5,7 @@
   "main": "lib/divshot.js",
   "scripts": {
     "build": "grunt build",
-    "test": "tapes test/**/*.js | tspec"
+    "test": "tapes test/**/*.js -s | tapes-format"
   },
   "repository": {
     "type": "git",
@@ -20,15 +20,16 @@
     "sinon": "1.7.x",
     "mocksy": "0.1.x",
     "tap-spec": "0.1.x",
-    "tapes": "0.1.x"
+    "tapes": "0.3.x",
+    "faucet": "0.0.1"
   },
   "dependencies": {
     "lodash.defaults": "2.2.x",
     "form-data": "0.1.x",
     "async": "0.2.x",
     "narrator": "0.6.x",
-    "promise": "4.0.x",
     "rapper": "0.7.x",
-    "url-join": "0.0.1"
+    "url-join": "0.0.1",
+    "promise": "^4.0.0"
   }
 }

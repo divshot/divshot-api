@@ -32,6 +32,7 @@
     "rapper": "0.7.x",
     "url-join": "0.0.1",
     "promise": "^4.0.0",
-    "btoa": "^1.1.1"
+    "btoa": "^1.1.1",
+    "underpromise": "0.0.1"
   }
 }

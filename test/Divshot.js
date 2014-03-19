@@ -40,6 +40,23 @@ test('divshot api wrapper set up', function (t) {
     t.end();
   });
   
+  t.test('credentials', function (t) {
+    divshot.credentials('username', 'password');
+    
+    t.deepEqual(divshot.credentials(), {
+      username: 'username',
+      password: 'password'
+    }, 'sets and gets username and password')
+    
+    divshot.username('username1');
+    t.equal(divshot.username(), 'username1', 'gets and sets the username');
+    
+    divshot.password('password1');
+    t.equal(divshot.password(), 'password1', 'gets and sets the password');
+    
+    t.end();
+  });
+  
   t.test('versioning', function (t) {
     t.test('has a default api version of 0.5.0', function (t) {
       t.equal(divshot.apiVersion(), '0.5.0', 'has default');

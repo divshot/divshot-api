@@ -5,7 +5,7 @@
   "main": "lib/divshot.js",
   "scripts": {
     "build": "grunt build",
-    "test": "tapes test/**/*.js | tap-dot"
+    "test": "mocha test/**/*.js"
   },
   "repository": {
     "type": "git",
@@ -19,10 +19,8 @@
   "devDependencies": {
     "sinon": "1.7.x",
     "mocksy": "0.1.x",
-    "tap-spec": "0.1.x",
-    "tapes": "0.4.x",
-    "faucet": "0.0.1",
-    "tap-dot": "0.1.x"
+    "mocha": "^1.18.2",
+    "expect.js": "^0.3.1"
   },
   "dependencies": {
     "lodash.defaults": "2.2.x",
@@ -32,7 +30,6 @@
     "rapper": "0.7.x",
     "url-join": "0.0.1",
     "promise": "^4.0.0",
-    "btoa": "^1.1.1",
-    "underpromise": "0.0.1"
+    "btoa": "^1.1.1"
   }
 }

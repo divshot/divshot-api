@@ -1,133 +1,162 @@
 var Divshot = require('../lib/divshot');
 var Mocksy = require('mocksy');
 var server = new Mocksy({port: 9999});
-var test = require('tapes');
+var expect = require('expect.js');
 
-test('apps', function (t) {
+describe('apps', function () {
+  
   var divshot;
   
-  t.beforeEach(function (t) {
+  beforeEach(function (done) {
     divshot = new Divshot();
     divshot.host('http://localhost:9999');
-    server.start(t.end);
+    server.start(done);
   });
   
-  t.afterEach(function (t) {
-    server.stop(t.end);
+  afterEach(function (done) {
+    server.stop(done);
   });
   
-  t.test('gets a list of apps', function (t) {
+  it('gets a list of apps', function (done) {
     divshot.apps.list().then(function (res) {
-      t.equal(res.url, '/apps', 'url');
-      t.equal(res.method, 'GET', 'method');
-      t.end();
+      expect(res.url).to.equal('/apps');
+      expect(res.method).to.equal('GET');
+      done();
     });
   });
   
-  t.test('gets an app by id', function (t) {
+  it('gets an app by id', function (done) {
     divshot.apps.id(123).get().then(function (res) {
-      t.equal(res.url, '/apps/123', 'url');
-      t.equal(res.method, 'GET', 'method');
-      t.end();
+      expect(res.url).to.equal('/apps/123');
+      expect(res.method).to.equal('GET');
+      done();
     });
   });
   
-  t.test('single app functions', function (t) {
+  describe('single app functions', function () {
     var app;
     
-    t.beforeEach(function (t) {
+    beforeEach(function () {
       app = divshot.apps.id(123);
-      t.end();
     });
     
     // domains
-    t.test('domains', function (t) {
-      t.plan(5);
+    describe('domains', function () {
       
-      app.domains.list().then(function (res) {
-        t.equal(res.url, '/apps/123/domains', 'gets a list of domains for a given app id');
+      it('gets a list of domains for a given app id', function (done) {
+        app.domains.list().then(function (res) {
+          expect(res.url).to.equal('/apps/123/domains');
+          done();
+        });
       });
       
-      app.domains.add('www.divshot.com').then(function (res) {
-        t.equal(res.url, '/apps/123/domains/www.divshot.com', 'url for adding a domain');
-        t.equal(res.method, 'PUT', 'method for adding a domain');
+      it('adds a domain', function (done) {
+        app.domains.add('www.divshot.com').then(function (res) {
+          expect(res.url).to.equal('/apps/123/domains/www.divshot.com');
+          expect(res.method).to.equal('PUT');
+          done();
+        });
       });
       
-      app.domains.remove('www.divshot.com').then(function (res) {
-        t.equal(res.url, '/apps/123/domains/www.divshot.com', 'url for removing domain');
-        t.equal(res.method, 'DELETE', 'method for removing domain');
+      it('removes a domain', function (done) {
+        app.domains.remove('www.divshot.com').then(function (res) {
+          expect(res.url).to.equal('/apps/123/domains/www.divshot.com');
+          expect(res.method).to.equal('DELETE');
+          done();
+        });
       });
+      
     });
     
-    // environments
-    t.test('update s an apps configuration', function (t) {
-      t.plan(3);
-      
+    it('update s an apps configuration', function (done) {
       app.env('production').configure({
         name: 'name'
       }).then(function (res) {
-        t.equal(res.url, '/apps/123/env/production/config', 'url');
-        t.deepEqual(res.body, {name: 'name'}, 'body');
-        t.equal(res.method, 'PUT', 'method');
+        expect(res.url).to.equal('/apps/123/env/production/config');
+        expect(res.body).to.eql({name: 'name'});
+        expect(res.method).to.equal('PUT', 'method');
+        done();
       });
     });
     
-    t.test('builds', function (t) {
-      t.plan(5);
-    
-      app.builds.id(456).get().then(function (res) {
-        t.equal(res.url, '/apps/123/builds/456', 'gets a single build by id');
+    describe('builds', function (done) {
+      
+      it('gets a single build by id', function (done) {
+        app.builds.id(456).get().then(function (res) {
+          expect(res.url).to.equal('/apps/123/builds/456');
+          done();
+        });
       });
     
-      app.builds.finalize(456).then(function (res) {
-        t.equal(res.url, '/apps/123/builds/456/finalize', 'finalizes a build for a given app');
+      it('finalizes a build for a given app', function (done) {
+        app.builds.finalize(456).then(function (res) {
+          expect(res.url).to.equal('/apps/123/builds/456/finalize');
+          done();
+        });
       });
-    
-      app.builds.id(789).release('production').then(function (res) {
-        t.equal(res.url, '/apps/123/releases/production', 'released to production url');
-        t.equal(res.method, 'POST', 'released to production method');
-        t.deepEqual(res.body, {build: '789'}, 'released to production body');
+      
+      it('released to production url', function (done) {
+        app.builds.id(789).release('production').then(function (res) {
+          expect(res.url).to.equal('/apps/123/releases/production');
+          expect(res.method).to.equal('POST');
+          expect(res.body).to.eql({build: '789'});
+          done();
+        });
       });
+      
     });
     
-    t.test('releases', function (t) {
-      t.plan(9);
+    describe('releases', function (done) {
       
-      app.releases.list().then(function (res) {
-        t.equal(res.url, '/apps/123/releases', 'release url')
+      it('gets app releases', function (done) {
+        app.releases.list().then(function (res) {
+          expect(res.url).to.equal('/apps/123/releases')
+          done();
+        });
       });
       
-      app.releases.env('production').get().then(function (res) {
-        t.equal(res.url, '/apps/123/releases/production', 'release environment');
-        t.equal(res.method, 'GET', 'gets release by environment');
+      it('gets a list of releases for an environment', function (done) {
+        app.releases.env('production').get().then(function (res) {
+          expect(res.url).to.equal('/apps/123/releases/production');
+          expect(res.method).to.equal('GET');
+          done();
+        });
       });
       
-      app.releases.env('production').rollback().then(function (res) {
-        t.equal(res.url, '/apps/123/releases/production/rollback', 'rolls back a release by environment');
-        t.equal(res.method, 'POST', 'sends a POST request to rollback release');
+      it('rolls back a release by environment', function (done) {
+        app.releases.env('production').rollback().then(function (res) {
+          expect(res.url).to.equal('/apps/123/releases/production/rollback');
+          expect(res.method).to.equal('POST');
+          done();
+        });
       });
       
-      app.releases.env('production').rollback('123').then(function (res) {
-        t.deepEqual(res.body, {version: '123'}, 'rolls back to a given version number');
+      it('rolls back to a given version number', function (done) {
+        app.releases.env('production').rollback('123').then(function (res) {
+          expect(res.body).to.eql({version: '123'});
+          done();
+        });
       });
       
-      app.releases.env('production').promote('staging').then(function (res) {
-        t.equal(res.url, '/apps/123/releases/production', 'url for promoting a release');
-        t.equal(res.method, 'POST', 'post request to promote a release')
-        t.deepEqual(res.body, {environment: 'staging'}, 'passes name of environment to promote');
+      it('promotes to another environment', function (done) {
+        app.releases.env('production').promote('staging').then(function (res) {
+          expect(res.url).to.equal('/apps/123/releases/production');
+          expect(res.method).to.equal('POST');
+          expect(res.body).to.eql({environment: 'staging'});
+          done();
+        });
       });
+      
     });
-    
-    t.end();
+
   });
 
-  t.test('gets all apps owned by an organization', function (t) {
+  it('gets all apps owned by an organization', function (done) {
     divshot.apps.organization('123').then(function (res) {
-      t.equal(res.url, '/organizations/123/apps', 'url to get app list')
-      t.equal(res.method, 'GET', 'sends a get request');
-      t.end();
+      expect(res.url).to.equal('/organizations/123/apps');
+      expect(res.method).to.equal('GET');
+      done();
     });
   });
-
-  t.end();
+  
 });

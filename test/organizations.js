@@ -1,85 +1,105 @@
 var Divshot = require('../lib/divshot');
 var Mocksy = require('mocksy');
 var server = new Mocksy({port: 9999});
-var test = require('tapes');
+var expect = require('expect.js');
 
-test('organizations', function (t) {
+describe('organizations', function (done) {
+  
   var divshot;
   
-  t.beforeEach(function (t) {
+  beforeEach(function (done) {
     divshot = new Divshot();
     divshot.host('http://localhost:9999');
-    server.start(t.end);
+    server.start(done);
   });
   
-  t.afterEach(function (t) {
-    server.stop(t.end);
+  afterEach(function (done) {
+    server.stop(done);
   });
   
-  t.test('RESTful organizations', function (t) {
-    t.plan(4);
+  describe('RESTful organizations', function (done) {
     
-    divshot.organizations.list().then(function (res) {
-      t.equal(res.url, '/organizations', 'organizations list url');
+    it('list the organizations', function (done) {
+      divshot.organizations.list().then(function (res) {
+        expect(res.url).to.equal('/organizations');
+        done();
+      });
     });
     
-    divshot.organizations.id('123').get().then(function (res) {
-      t.equal(res.url, '/organizations/123', 'get single organization');
+    it('gets a single organization', function (done) {
+      divshot.organizations.id('123').get().then(function (res) {
+        expect(res.url).to.equal('/organizations/123');
+        done();
+      });
     });
     
-    divshot.organizations.create({
-      name: 'name',
-    }).then(function (res) {
-      t.deepEqual(res.body, {
+    it('create an organization', function (done) {
+      divshot.organizations.create({
         name: 'name',
-      }, 'creates an organization');
+      }).then(function (res) {
+        expect(res.body).to.eql({name: 'name'});
+        done();
+      });
     });
-
-    divshot.organizations.id('123').update({
-      name: 'name',
-    }).then(function (res) {
-      t.deepEqual(res.body, {
+    
+    it('updates an organization', function (done) {
+      divshot.organizations.id('123').update({
         name: 'name',
-      }, 'updates an organization');
+      }).then(function (res) {
+        expect(res.body).to.eql({name: 'name'});
+        done();
+      });
     });
+    
   });
   
-  t.test('list apps for an organization', function (t) {
+  it('lists apps for an organization', function (done) {
     divshot.organizations.id('123').apps.list().then(function (res) {
-      t.equal(res.url, '/organizations/123/apps', 'organization apps list url');
-      t.end();
+      expect(res.url).to.equal('/organizations/123/apps');
+      done();
     });
   });
   
-  t.test('members', function (t) {
-    t.plan(6);
-     
-    divshot.organizations.id('123').members.list().then(function (res) {
-      t.equal(res.url, '/organizations/123/members', 'get organization member list');
+  describe('members', function (done) {
+    
+    it('gets organization member list', function (done) {
+      divshot.organizations.id('123').members.list().then(function (res) {
+        expect(res.url).to.equal('/organizations/123/members');
+        done();
+      });
     });
-
-    divshot.organizations.id('123').members.create({
-      name: 'email',
-      email: 'email'
-    }).then(function (res) {
-      t.deepEqual(res.body, {
+    
+    it('invites members to an organization', function (done) {
+      divshot.organizations.id('123').members.create({
         name: 'email',
         email: 'email'
-      }, 'invites members to an organization');
+      }).then(function (res) {
+        expect(res.body).to.eql({
+          name: 'email',
+          email: 'email'
+        });
+        done();
+      });
     });
 
-    divshot.organizations.id('123').members.id('456').update({
-      admin: false // or true
-    }).then(function (res) {
-      t.equal(res.url, '/organizations/123/members/456', 'url for member update');
-      t.deepEqual(res.body, {admin: 'false'}, 'updates a member to remove admin priveleges');
+    it('sets the member priveleges on an organization', function (done) {
+      divshot.organizations.id('123').members.id('456').update({
+        admin: false // or true
+      }).then(function (res) {
+        expect(res.url).to.equal('/organizations/123/members/456');
+        expect(res.body).to.eql({admin: 'false'});
+        done();
+      });
+    });
+    
+    it('removes a member from an organization', function (done) {
+      divshot.organizations.id('123').members.id('456').remove().then(function (res) {
+        expect(res.url).to.equal('/organizations/123/members/456');
+        expect(res.method).to.equal('DELETE');
+        done();
+      });
     });
 
-    divshot.organizations.id('123').members.id('456').remove().then(function (res) {
-      t.equal(res.url, '/organizations/123/members/456', 'url for deleting organization member');
-      t.equal(res.method, 'DELETE', 'method for deleting organization member');
-    });
   });
-  
-  t.end();
+
 });

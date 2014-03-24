@@ -1,46 +1,80 @@
 var Divshot = require('../lib/divshot');
-var test = require('tapes');
 var Mocksy = require('mocksy');
 var server = new Mocksy({port: 9999});
+var expect = require('expect.js');
 
-test('user', function (t) {
+describe('user', function () {
+  
   var divshot;
   
-  t.beforeEach(function (t) {
+  beforeEach(function (done) {
     divshot = new Divshot();
     divshot.host('http://localhost:9999');
-    server.start(t.end);
+    server.start(done);
   });
   
-  t.afterEach(function (t) {
-    server.stop(t.end);
+  afterEach(function (done) {
+    server.stop(done);
   });
   
-  t.test('authenticates a user with a token', function (t) {
+  it('authenticates a user with a token', function (done) {
     divshot.credentials('username', 'password');
     
     divshot.user.tokenAuth().then(function (token) {
-      t.equal(token, undefined, 'returned token');
-      t.end();
+      expect(token).to.not.be.ok();
+      done();
     });
   });
   
-  t.test('returns the token if user is authenticated', function (t) {
+  it('returns the token if user is authenticated', function (done) {
     divshot.token('token');
     divshot.user.tokenAuth().then(function (token) {
-      t.equal(token, 'token', 'returns the current token');
-      t.end();
+      expect(token).to.equal('token');
+      done();
     });
   });
   
-  t.test('returns nothing if the session is set', function (t) {
+  it('returns nothing if the session is set', function (done) {
     divshot.session('client_id');
     divshot.user.tokenAuth().then(function (token) {
-      t.equal(token, undefined, 'returns nothing');
-      t.end();
+      expect(token).to.not.be.ok();
+      done();
     });
   });
   
+  it('makes request to get current user data', function (done) {
+    divshot.user.self().then(function (user) {
+      expect(user.url).to.equal('/self');
+      expect(user.method).to.equal('GET');
+      done();
+    });
+  });
   
-  t.end();
+  it('creates a user endpoint by id', function (done) {
+    var user = divshot.user.id(123);
+    user.get().then(function (res) {
+      expect(res.url).to.equal('/users/123');
+      done();
+    });
+  });
+  
+  it('resets the user password', function (done) {
+    divshot.user.id(123).password.reset().then(function (res) {
+      expect(res.url).to.equal('/actions/reset_password/123');
+      expect(res.method).to.equal('POST');
+      done();
+    });
+  });
+  
+  it('emails', function (done) {
+    
+    // it('adds an email', function (done) {
+    //   divshot.user.emails.add('email@email.com').then(function (res) {
+    //     done();
+    //   });
+    // });
+    
+    done();
+  });
+  
 });

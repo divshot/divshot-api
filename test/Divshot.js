@@ -1,88 +1,72 @@
 var Divshot = require('../lib/divshot');
-var test = require('tapes');
+var expect = require('expect.js');
 
-test('divshot api wrapper set up', function (t) {
+describe('divshot api wrapper set up', function (t) {
   var divshot;
   
-  t.beforeEach(function (t) {
+  beforeEach(function () {
     divshot = new Divshot();
-    t.end();
   });
   
-  t.test('sets the token', function (t) {
+  it('sets the token', function () {
     divshot.token('token');
-    t.equal(divshot.token(), 'token', 'set the token');
-    t.end();
+    expect(divshot.token()).to.equal('token');
   });
 
-  t.test('sets the token header when the token is set', function (t) {
+  it('sets the token header when the token is set', function () {
     divshot.token('token');
-    t.equal(divshot.header('Authorization'), 'Bearer token', 'set the bearer token header');
-    t.end()
+    expect(divshot.header('Authorization')).to.equal('Bearer token');
   });
     
-  t.test('overrides the host', function (t) {
+  it('overrides the host', function () {
     divshot.host('host');
-    t.equal(divshot.host(), 'host', 'set the host');
-    t.end();
+    expect(divshot.host()).to.equal('host');
   });
     
-  t.test('sets the client id on the session header', function (t) {
+  it('sets the client id on the session header', function () {
     divshot.session('client_id');
-    t.equal(divshot.header('Authorization'), 'Session client_id', 'set the session header');
-    t.equal(divshot.clientId(), 'client_id', 'set the client id');
-    t.end();
+    expect(divshot.header('Authorization')).to.equal('Session client_id');
+    expect(divshot.clientId()).to.equal('client_id');
   });
     
-  t.test('forces CORS with credentials if session is set', function (t) {
+  it('forces CORS with credentials if session is set', function () {
     divshot.session('client_id');
-    t.ok(divshot.xhr('withCredentials'), 'set withCredentials');
-    t.end();
+    expect(divshot.xhr('withCredentials')).to.be.ok();
   });
   
-  t.test('credentials', function (t) {
+  it('credentials', function () {
     divshot.credentials('username', 'password');
     
-    t.deepEqual(divshot.credentials(), {
+    expect(divshot.credentials()).to.eql({
       username: 'username',
       password: 'password'
-    }, 'sets and gets username and password')
+    });
     
     divshot.username('username1');
-    t.equal(divshot.username(), 'username1', 'gets and sets the username');
+    expect(divshot.username()).to.equal('username1');
     
     divshot.password('password1');
-    t.equal(divshot.password(), 'password1', 'gets and sets the password');
-    
-    t.end();
+    expect(divshot.password()).to.equal('password1');
   });
   
-  t.test('versioning', function (t) {
-    t.test('has a default api version of 0.5.0', function (t) {
-      t.equal(divshot.apiVersion(), '0.5.0', 'has default');
-      t.end();
+  describe('versioning', function () {
+    it('has a default api version of 0.5.0', function () {
+      expect(divshot.apiVersion()).to.equal('0.5.0');
     });
       
-    t.test('sets a custom api version', function (t) {
+    it('sets a custom api version', function () {
       divshot.apiVersion('0.6.0');
-      t.equal(divshot.apiVersion(), '0.6.0', 'set the version number');
-      t.end();
+      expect(divshot.apiVersion()).to.equal('0.6.0');
     });
       
-    t.test('sets the default api version from the environment', function (t) {
+    it('sets the default api version from the environment', function () {
       process.env.DIVSHOT_API_URL = '0.6.0';
       var divshot = new Divshot();
-      t.equal(divshot.apiVersion(), '0.6.0', 'set the version number');
-      t.end();
+      expect(divshot.apiVersion()).to.equal('0.6.0');
     });
       
-    t.test('sets the version header for all http requests', function (t) {
-      t.equal(divshot.header('Accepts-Version'), divshot.apiVersion(), 'set api version number');
-      t.end();
+    it('sets the version header for all http requests', function () {
+      expect(divshot.header('Accepts-Version')).to.equal(divshot.apiVersion());
     });
-    
-    t.end();
   });
-  
-  t.end();
 });

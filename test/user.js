@@ -66,15 +66,38 @@ describe('user', function () {
     });
   });
   
-  it('emails', function (done) {
+  describe('emails', function (done) {
     
-    // it('adds an email', function (done) {
-    //   divshot.user.emails.add('email@email.com').then(function (res) {
-    //     done();
-    //   });
-    // });
+    it('adds an email to the user', function (done) {
+      divshot.user.id(123).emails.add('email@email.com').then(function (res) {
+        expect(res.body).to.eql({address: 'email@email.com'});
+        done();
+      });
+    });
     
-    done();
+    it('sets the primary email for a user', function (done) {
+      divshot.user.id(123).emails.add('email@email.com', true).then(function (res) {
+        expect(res.body).to.eql({address: 'email@email.com', primary: "true"});
+        done();
+      });
+    });
+    
+    it('removes a user email', function (done) {
+      divshot.user.id(123).emails.remove('email@email.com').then(function (res) {
+        expect(res.url).to.equal('/self/emails/email@email.com');
+        expect(res.method).to.equal('DELETE');
+        done();
+      });
+    });
+    
+    it('resends an invite to the user', function (done) {
+      divshot.user.id(123).emails.resend('email@email.com').then(function (res) {
+        expect(res.url).to.equal('/self/emails/email@email.com/resend');
+        expect(res.method).to.equal('POST');
+        done();
+      });
+    });
+    
   });
   
 });

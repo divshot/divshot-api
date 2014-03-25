@@ -4,9 +4,14 @@
   "description": "Wrapper for the Divshot api",
   "main": "lib/divshot.js",
   "scripts": {
-    "build": "grunt build",
+    
     "test": "npm run lint && mocha test/ --recursive",
-    "lint": "jshint lib/"
+    "lint": "jshint lib/",
+    
+    "build": "npm test && npm run build-standalone && npm run build-angular",
+    "build-angular": "build/angular.js",
+    "build-standalone": "build/standalone.js"
+    
   },
   "repository": {
     "type": "git",
@@ -22,16 +27,14 @@
     "mocksy": "0.1.x",
     "mocha": "^1.18.2",
     "expect.js": "^0.3.1",
-    "jshint": "^2.4.4"
+    "jshint": "^2.4.4",
+    "ngmin": "^0.4.1",
+    "browserify": "^3.33.0",
+    "minify": "^0.2.6"
   },
   "dependencies": {
-    "lodash.defaults": "2.2.x",
-    "form-data": "0.1.x",
-    "async": "0.2.x",
-    "narrator": "0.6.x",
     "rapper": "0.7.x",
     "url-join": "0.0.1",
-    "promise": "^4.0.0",
     "btoa": "^1.1.1"
   },
   "jshintConfig": {

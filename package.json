@@ -5,7 +5,8 @@
   "main": "lib/divshot.js",
   "scripts": {
     "build": "grunt build",
-    "test": "mocha test/**/*.js"
+    "test": "npm run lint && mocha test/ --recursive",
+    "lint": "jshint lib/"
   },
   "repository": {
     "type": "git",
@@ -20,7 +21,8 @@
     "sinon": "1.7.x",
     "mocksy": "0.1.x",
     "mocha": "^1.18.2",
-    "expect.js": "^0.3.1"
+    "expect.js": "^0.3.1",
+    "jshint": "^2.4.4"
   },
   "dependencies": {
     "lodash.defaults": "2.2.x",
@@ -31,5 +33,37 @@
     "url-join": "0.0.1",
     "promise": "^4.0.0",
     "btoa": "^1.1.1"
+  },
+  "jshintConfig": {
+    "expr": true,
+    "curly": false,
+    "eqeqeq": true,
+    "immed": true,
+    "latedef": false,
+    "newcap": true,
+    "noarg": true,
+    "sub": true,
+    "undef": true,
+    "unused": false,
+    "boss": true,
+    "eqnull": true,
+    "node": true,
+    "laxbreak": true,
+    "globals": {
+      "require": true,
+      "module": true,
+      "exports": true,
+      "it": true,
+      "describe": true,
+      "beforeEach": true,
+      "afterEach": true,
+      "chai": true,
+      "Regex": true,
+      "btoa": true,
+      "atob": true,
+      "window": true,
+      "document": true,
+      "angular": true
+    }
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "divshot-api",
-  "version": "0.6.4",
+  "version": "0.7.0",
   "description": "Wrapper for the Divshot api",
   "main": "lib/divshot.js",
   "scripts": {

@@ -17,6 +17,9 @@ describe('user', function () {
     server.stop(done);
   });
   
+  it('deletes a user account');
+  it('sets a user as welcomed');
+  
   it('authenticates a user with a token', function (done) {
     divshot.credentials('username', 'password');
     

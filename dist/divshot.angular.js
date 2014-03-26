@@ -486,7 +486,7 @@ module.exports = function (api, divshot, credentials) {
   
   var password = api.endpoint('self').one('password', {
     reset: function (userId, callback) {
-      return this.http.request(this.options.host = '/actions/reset_password/' + userId, 'POST', callback);
+      return this.http.request(this.options.host + '/actions/reset_password/' + userId, 'POST', callback);
     }
   });
   
@@ -536,6 +536,10 @@ module.exports = function (api, divshot, credentials) {
       this.credentials.email = credentials.email;
       this.credentials.password = credentials.password;
       this.credentials.token = credentials.token;
+    },
+
+    setWelcomed: function (callback) {
+      return this.http.request(this.options.host + '/self/welcomed', 'PUT', callback);
     },
     
     self: function (callback) {

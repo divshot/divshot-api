@@ -317,10 +317,20 @@ api.apps.create('app-name').then(function (app) {
   
 });
 
+// Create an app from object
+api.apps.createFromObject(params).then(function (app) {
+  
+});
+
 // A specific app
 var app = api.apps.id('app name');
 app.get().then(function (app) {
   
+});
+
+// Delete an app
+app.remove().then(function (res) {
+
 });
 ```
 

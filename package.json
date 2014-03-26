@@ -1,6 +1,6 @@
 {
   "name": "divshot-api",
-  "version": "0.6.7",
+  "version": "0.6.8",
   "description": "Wrapper for the Divshot api",
   "main": "lib/Divshot.js",
   "scripts": {
@@ -34,6 +34,7 @@
     "form-data": "~0.1.2",
     "async": "~0.2.9",
     "narrator": "0.6.x",
-    "promise": "~4.0.0"
+    "promise": "~4.0.0",
+    "btoa": "1.1.x"
   }
 }

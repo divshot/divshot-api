@@ -192,6 +192,11 @@ user.update({
   
 });
 
+// Set welcomed for new users
+api.user.setWelcomed().then(function () {
+
+});
+
 ```
 
 #### User password

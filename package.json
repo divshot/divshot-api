@@ -5,7 +5,7 @@
   "main": "lib/divshot.js",
   "scripts": {
     
-    "test": "npm run lint && mocha test/ --recursive",
+    "test": "npm run lint && mocha test/ --recursive --reporter spec",
     "lint": "jshint lib/",
     
     "build": "npm test && npm run build-standalone && npm run build-angular",

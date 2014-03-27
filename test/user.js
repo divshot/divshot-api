@@ -19,6 +19,31 @@ describe('user', function () {
   
   it('deletes a user account');
   it('sets a user as welcomed');
+  it('generates an authentication ticket');
+  it('checks the status of an authentication ticket');
+  
+  
+  /*
+  generateTicket: function (callback) {
+    return this.http._http(this.options.host + '/token/tickets', 'POST', {
+      headers: {
+        Authorization: 'Basic ' + btoa(this.credentials.client_id + ":")
+      }
+    }, callback);
+  },
+  
+  checkTicketStatus: function (ticket, callback) {
+    return this.http._http(this.options.host + '/token', 'POST', {
+      form: {
+        grant_type: 'ticket',
+        ticket: ticket
+      },
+      headers: {
+        Authorization: 'Basic ' + btoa(this.credentials.client_id + ":")
+      }
+    }, callback);
+  }
+   */
   
   it('authenticates a user with a token', function (done) {
     divshot.credentials('username', 'password');

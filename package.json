@@ -10,6 +10,9 @@
     "build-angular": "build/angular.js",
     "build-standalone": "build/standalone.js"
   },
+  "pre-commit": [
+    "npm test"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/divshot/divshot-api.git"
@@ -22,18 +25,19 @@
   "devDependencies": {
     "sinon": "1.7.x",
     "mocksy": "0.1.x",
-    "mocha": "^1.18.2",
-    "expect.js": "^0.3.1",
-    "jshint": "^2.4.4",
-    "ngmin": "^0.4.1",
-    "browserify": "^3.33.0",
-    "minify": "^0.2.6",
-    "Base64": "^0.2.0"
+    "mocha": "1.18.x",
+    "expect.js": "0.3.x",
+    "jshint": "2.4.x",
+    "ngmin": "0.4.x",
+    "browserify": "3.33.x",
+    "minify": "0.2.x",
+    "Base64": "0.2.x",
+    "pre-commit": "0.0.4"
   },
   "dependencies": {
     "rapper": "0.7.x",
     "url-join": "0.0.1",
-    "Base64": "^0.2.0"
+    "Base64": "0.2.x"
   },
   "jshintConfig": {
     "expr": true,

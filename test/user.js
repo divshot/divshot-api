@@ -37,30 +37,19 @@ describe('user', function () {
     });
   });
   
-  it('checks the status of an authentication ticket');
-  
-  
-  /*
-  generateTicket: function (callback) {
-    return this.http._http(this.options.host + '/token/tickets', 'POST', {
-      headers: {
-        Authorization: 'Basic ' + btoa(this.credentials.client_id + ":")
-      }
-    }, callback);
-  },
-  
-  checkTicketStatus: function (ticket, callback) {
-    return this.http._http(this.options.host + '/token', 'POST', {
-      form: {
+  it('checks the status of an authentication ticket', function () {
+    divshot.clientId(123);
+    
+    return divshot.user.checkTicketStatus('ticket_name').then(function (res) {
+      expect(res.url).to.equal('/token');
+      expect(res.method).to.equal('POST');
+      expect(res.headers.authorization).to.equal('Basic ' + btoa(123));
+      expect(res.body).to.eql({
         grant_type: 'ticket',
-        ticket: ticket
-      },
-      headers: {
-        Authorization: 'Basic ' + btoa(this.credentials.client_id + ":")
-      }
-    }, callback);
-  }
-   */
+        ticket: 'ticket_name'
+      });
+    });
+  });
   
   it('authenticates a user with a token', function () {
     divshot.credentials('username', 'password');

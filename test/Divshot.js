@@ -1,5 +1,6 @@
 var Divshot = require('../lib/divshot');
 var expect = require('expect.js');
+var btoa = require('btoa');
 
 describe('divshot api wrapper set up', function (t) {
   var divshot;
@@ -72,6 +73,11 @@ describe('divshot api wrapper set up', function (t) {
       
     it('sets the version header for all http requests', function () {
       expect(divshot.header('Accepts-Version')).to.equal(divshot.apiVersion());
+    });
+    
+    it('sets an encoded basic auth header', function () {
+      divshot.basicAuthHeader(123);
+      expect(divshot.headers.Authorization).to.equal('Basic ' + btoa(123));
     });
   });
 });

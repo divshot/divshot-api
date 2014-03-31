@@ -28,12 +28,12 @@
     "ngmin": "^0.4.1",
     "browserify": "^3.33.0",
     "minify": "^0.2.6",
-    "btoa": "^1.1.1"
+    "Base64": "^0.2.0"
   },
   "dependencies": {
     "rapper": "0.7.x",
     "url-join": "0.0.1",
-    "btoa": "^1.1.1"
+    "Base64": "^0.2.0"
   },
   "jshintConfig": {
     "expr": true,

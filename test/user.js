@@ -2,7 +2,7 @@ var Divshot = require('../lib/divshot');
 var Mocksy = require('mocksy');
 var server = new Mocksy({port: 9999});
 var expect = require('expect.js');
-var btoa = require('btoa');
+var btoa = require('Base64').btoa;
 
 describe('user', function () {
   
@@ -33,7 +33,7 @@ describe('user', function () {
     return divshot.user.generateTicket().then(function (res) {
       expect(res.url).to.equal('/token/tickets');
       expect(res.method).to.equal('POST');
-      expect(res.headers.authorization).to.equal('Basic ' + btoa(123));
+      expect(res.headers.authorization).to.equal('Basic ' + btoa('123'));
     });
   });
   
@@ -43,7 +43,7 @@ describe('user', function () {
     return divshot.user.checkTicketStatus('ticket_name').then(function (res) {
       expect(res.url).to.equal('/token');
       expect(res.method).to.equal('POST');
-      expect(res.headers.authorization).to.equal('Basic ' + btoa(123));
+      expect(res.headers.authorization).to.equal('Basic ' + btoa('123'));
       expect(res.body).to.eql({
         grant_type: 'ticket',
         ticket: 'ticket_name'

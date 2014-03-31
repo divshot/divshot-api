@@ -1,6 +1,6 @@
 var Divshot = require('../lib/divshot');
 var expect = require('expect.js');
-var btoa = require('btoa');
+var btoa = require('Base64').btoa;
 
 describe('divshot api wrapper set up', function (t) {
   var divshot;
@@ -32,7 +32,7 @@ describe('divshot api wrapper set up', function (t) {
   
   it('sets the client id by itself', function () {
     divshot.clientId(123);
-    expect(divshot.clientId()).to.equal(123);
+    expect(divshot.clientId()).to.equal('123');
   });
     
   it('forces CORS with credentials if session is set', function () {
@@ -77,7 +77,7 @@ describe('divshot api wrapper set up', function (t) {
     
     it('sets an encoded basic auth header', function () {
       divshot.basicAuthHeader(123);
-      expect(divshot.headers.Authorization).to.equal('Basic ' + btoa(123));
+      expect(divshot.headers.Authorization).to.equal('Basic ' + btoa('123'));
     });
   });
 });

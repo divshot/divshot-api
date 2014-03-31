@@ -11,9 +11,7 @@
     "build-standalone": "build/standalone.js"
   },
   "pre-commit": [
-  
-    "npm test"
-    
+    "test"
   ],
   "repository": {
     "type": "git",

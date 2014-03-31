@@ -19,15 +19,15 @@ describe('apps', function () {
   
   it('gets a list of apps', function () {
     return divshot.apps.list().then(function (res) {
-      expect(res.url).to.equal('/apps');
-      expect(res.method).to.equal('GET');
+      expect(res.body.url).to.equal('/apps');
+      expect(res.body.method).to.equal('GET');
     });
   });
   
   it('gets an app by id', function () {
     return divshot.apps.id(123).get().then(function (res) {
-      expect(res.url).to.equal('/apps/123');
-      expect(res.method).to.equal('GET');
+      expect(res.body.url).to.equal('/apps/123');
+      expect(res.body.method).to.equal('GET');
     });
   });
   
@@ -43,21 +43,21 @@ describe('apps', function () {
       
       it('gets a list of domains for a given app id', function () {
         return app.domains.list().then(function (res) {
-          expect(res.url).to.equal('/apps/123/domains');
+          expect(res.body.url).to.equal('/apps/123/domains');
         });
       });
       
       it('adds a domain', function () {
         return app.domains.add('www.divshot.com').then(function (res) {
-          expect(res.url).to.equal('/apps/123/domains/www.divshot.com');
-          expect(res.method).to.equal('PUT');
+          expect(res.body.url).to.equal('/apps/123/domains/www.divshot.com');
+          expect(res.body.method).to.equal('PUT');
         });
       });
       
       it('removes a domain', function () {
         return app.domains.remove('www.divshot.com').then(function (res) {
-          expect(res.url).to.equal('/apps/123/domains/www.divshot.com');
-          expect(res.method).to.equal('DELETE');
+          expect(res.body.url).to.equal('/apps/123/domains/www.divshot.com');
+          expect(res.body.method).to.equal('DELETE');
         });
       });
       
@@ -67,9 +67,9 @@ describe('apps', function () {
       return app.env('production').configure({
         name: 'name'
       }).then(function (res) {
-        expect(res.url).to.equal('/apps/123/env/production/config');
-        expect(res.body).to.eql({name: 'name'});
-        expect(res.method).to.equal('PUT', 'method');
+        expect(res.body.url).to.equal('/apps/123/env/production/config');
+        expect(res.body.body).to.eql({name: 'name'});
+        expect(res.body.method).to.equal('PUT', 'method');
       });
     });
     
@@ -77,21 +77,21 @@ describe('apps', function () {
       
       it('gets a single build by id', function () {
         return app.builds.id(456).get().then(function (res) {
-          expect(res.url).to.equal('/apps/123/builds/456');
+          expect(res.body.url).to.equal('/apps/123/builds/456');
         });
       });
     
       it('finalizes a build for a given app', function () {
         return app.builds.finalize(456).then(function (res) {
-          expect(res.url).to.equal('/apps/123/builds/456/finalize');
+          expect(res.body.url).to.equal('/apps/123/builds/456/finalize');
         });
       });
       
       it('released to production url', function () {
         return app.builds.id(789).release('production').then(function (res) {
-          expect(res.url).to.equal('/apps/123/releases/production');
-          expect(res.method).to.equal('POST');
-          expect(res.body).to.eql({build: '789'});
+          expect(res.body.url).to.equal('/apps/123/releases/production');
+          expect(res.body.method).to.equal('POST');
+          expect(res.body.body).to.eql({build: '789'});
         });
       });
       
@@ -101,35 +101,35 @@ describe('apps', function () {
       
       it('gets app releases', function () {
         return app.releases.list().then(function (res) {
-          expect(res.url).to.equal('/apps/123/releases')
+          expect(res.body.url).to.equal('/apps/123/releases')
         });
       });
       
       it('gets a list of releases for an environment', function () {
         return app.releases.env('production').get().then(function (res) {
-          expect(res.url).to.equal('/apps/123/releases/production');
-          expect(res.method).to.equal('GET');
+          expect(res.body.url).to.equal('/apps/123/releases/production');
+          expect(res.body.method).to.equal('GET');
         });
       });
       
       it('rolls back a release by environment', function () {
         return app.releases.env('production').rollback().then(function (res) {
-          expect(res.url).to.equal('/apps/123/releases/production/rollback');
-          expect(res.method).to.equal('POST');
+          expect(res.body.url).to.equal('/apps/123/releases/production/rollback');
+          expect(res.body.method).to.equal('POST');
         });
       });
       
       it('rolls back to a given version number', function () {
         return app.releases.env('production').rollback('123').then(function (res) {
-          expect(res.body).to.eql({version: '123'});
+          expect(res.body.body).to.eql({version: '123'});
         });
       });
       
       it('promotes to another environment', function () {
         return app.releases.env('production').promote('staging').then(function (res) {
-          expect(res.url).to.equal('/apps/123/releases/production');
-          expect(res.method).to.equal('POST');
-          expect(res.body).to.eql({environment: 'staging'});
+          expect(res.body.url).to.equal('/apps/123/releases/production');
+          expect(res.body.method).to.equal('POST');
+          expect(res.body.body).to.eql({environment: 'staging'});
         });
       });
       
@@ -139,8 +139,8 @@ describe('apps', function () {
 
   it('gets all apps owned by an organization', function () {
     return divshot.apps.organization('123').then(function (res) {
-      expect(res.url).to.equal('/organizations/123/apps');
-      expect(res.method).to.equal('GET');
+      expect(res.body.url).to.equal('/organizations/123/apps');
+      expect(res.body.method).to.equal('GET');
     });
   });
   

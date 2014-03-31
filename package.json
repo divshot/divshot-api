@@ -35,7 +35,7 @@
     "pre-commit": "0.0.4"
   },
   "dependencies": {
-    "rapper": "0.7.x",
+    "rapper": "0.8.x",
     "url-join": "0.0.1",
     "Base64": "0.2.x"
   },

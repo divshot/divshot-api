@@ -19,7 +19,7 @@ describe('builds', function () {
   
   it('provides a builds endpoint', function () {
     return divshot.builds.list().then(function (res) {
-      expect(res.url).to.equal('/builds');
+      expect(res.body.url).to.equal('/builds');
     });
   });
   

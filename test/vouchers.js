@@ -15,8 +15,8 @@ describe('vouchers', function () {
   
   it('redeems a voucher', function () {
     return divshot.vouchers.redeem(123).then(function (res) {
-      expect(res.url).to.equal('/vouchers/123/redeem');
-      expect(res.method).to.equal('PUT');
+      expect(res.body.url).to.equal('/vouchers/123/redeem');
+      expect(res.body.method).to.equal('PUT');
     });
   });
   

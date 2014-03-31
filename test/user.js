@@ -22,8 +22,8 @@ describe('user', function () {
   
   it('sets a user as welcomed', function () {
     return divshot.user.welcomed().then(function (res) {
-      expect(res.url).to.equal('/self/welcomed');
-      expect(res.method).to.equal('PUT');
+      expect(res.body.url).to.equal('/self/welcomed');
+      expect(res.body.method).to.equal('PUT');
     });
   });
   
@@ -31,9 +31,9 @@ describe('user', function () {
     divshot.clientId(123);
     
     return divshot.user.generateTicket().then(function (res) {
-      expect(res.url).to.equal('/token/tickets');
-      expect(res.method).to.equal('POST');
-      expect(res.headers.authorization).to.equal('Basic ' + btoa('123'));
+      expect(res.body.url).to.equal('/token/tickets');
+      expect(res.body.method).to.equal('POST');
+      expect(res.body.headers.authorization).to.equal('Basic ' + btoa('123'));
     });
   });
   
@@ -41,10 +41,10 @@ describe('user', function () {
     divshot.clientId(123);
     
     return divshot.user.checkTicketStatus('ticket_name').then(function (res) {
-      expect(res.url).to.equal('/token');
-      expect(res.method).to.equal('POST');
-      expect(res.headers.authorization).to.equal('Basic ' + btoa('123'));
-      expect(res.body).to.eql({
+      expect(res.body.url).to.equal('/token');
+      expect(res.body.method).to.equal('POST');
+      expect(res.body.headers.authorization).to.equal('Basic ' + btoa('123'));
+      expect(res.body.body).to.eql({
         grant_type: 'ticket',
         ticket: 'ticket_name'
       });
@@ -74,23 +74,23 @@ describe('user', function () {
   });
   
   it('makes request to get current user data', function () {
-    return divshot.user.self().then(function (user) {
-      expect(user.url).to.equal('/self');
-      expect(user.method).to.equal('GET');
+    return divshot.user.self().then(function (res) {
+      expect(res.body.url).to.equal('/self');
+      expect(res.body.method).to.equal('GET');
     });
   });
   
   it('creates a user endpoint by id', function () {
     var user = divshot.user.id(123);
     return user.get().then(function (res) {
-      expect(res.url).to.equal('/users/123');
+      expect(res.body.url).to.equal('/users/123');
     });
   });
   
   it('resets the user password', function () {
     return divshot.user.id(123).password.reset().then(function (res) {
-      expect(res.url).to.equal('/actions/reset_password/123');
-      expect(res.method).to.equal('POST');
+      expect(res.body.url).to.equal('/actions/reset_password/123');
+      expect(res.body.method).to.equal('POST');
     });
   });
   
@@ -98,27 +98,27 @@ describe('user', function () {
     
     it('adds an email to the user', function () {
       return divshot.user.id(123).emails.add('email@email.com').then(function (res) {
-        expect(res.body).to.eql({address: 'email@email.com'});
+        expect(res.body.body).to.eql({address: 'email@email.com'});
       });
     });
     
     it('sets the primary email for a user', function () {
       return divshot.user.id(123).emails.add('email@email.com', true).then(function (res) {
-        expect(res.body).to.eql({address: 'email@email.com', primary: "true"});
+        expect(res.body.body).to.eql({address: 'email@email.com', primary: "true"});
       });
     });
     
     it('removes a user email', function () {
       return divshot.user.id(123).emails.remove('email@email.com').then(function (res) {
-        expect(res.url).to.equal('/self/emails/email@email.com');
-        expect(res.method).to.equal('DELETE');
+        expect(res.body.url).to.equal('/self/emails/email@email.com');
+        expect(res.body.method).to.equal('DELETE');
       });
     });
     
     it('resends an invite to the user', function () {
       return divshot.user.id(123).emails.resend('email@email.com').then(function (res) {
-        expect(res.url).to.equal('/self/emails/email@email.com/resend');
-        expect(res.method).to.equal('POST');
+        expect(res.body.url).to.equal('/self/emails/email@email.com/resend');
+        expect(res.body.method).to.equal('POST');
       });
     });
     

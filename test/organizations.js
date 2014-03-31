@@ -21,13 +21,13 @@ describe('organizations', function () {
     
     it('list the organizations', function () {
       return divshot.organizations.list().then(function (res) {
-        expect(res.url).to.equal('/organizations');
+        expect(res.body.url).to.equal('/organizations');
       });
     });
     
     it('gets a single organization', function () {
       return divshot.organizations.id('123').get().then(function (res) {
-        expect(res.url).to.equal('/organizations/123');
+        expect(res.body.url).to.equal('/organizations/123');
       });
     });
     
@@ -35,7 +35,7 @@ describe('organizations', function () {
       return divshot.organizations.create({
         name: 'name',
       }).then(function (res) {
-        expect(res.body).to.eql({name: 'name'});
+        expect(res.body.body).to.eql({name: 'name'});
       });
     });
     
@@ -43,7 +43,7 @@ describe('organizations', function () {
       return divshot.organizations.id('123').update({
         name: 'name',
       }).then(function (res) {
-        expect(res.body).to.eql({name: 'name'});
+        expect(res.body.body).to.eql({name: 'name'});
       });
     });
     
@@ -51,7 +51,7 @@ describe('organizations', function () {
   
   it('lists apps for an organization', function () {
     return divshot.organizations.id('123').apps.list().then(function (res) {
-      expect(res.url).to.equal('/organizations/123/apps');
+      expect(res.body.url).to.equal('/organizations/123/apps');
     });
   });
   
@@ -59,7 +59,7 @@ describe('organizations', function () {
     
     it('gets organization member list', function () {
       return divshot.organizations.id('123').members.list().then(function (res) {
-        expect(res.url).to.equal('/organizations/123/members');
+        expect(res.body.url).to.equal('/organizations/123/members');
       });
     });
     
@@ -68,7 +68,7 @@ describe('organizations', function () {
         name: 'email',
         email: 'email'
       }).then(function (res) {
-        expect(res.body).to.eql({
+        expect(res.body.body).to.eql({
           name: 'email',
           email: 'email'
         });
@@ -79,15 +79,15 @@ describe('organizations', function () {
       return divshot.organizations.id('123').members.id('456').update({
         admin: false // or true
       }).then(function (res) {
-        expect(res.url).to.equal('/organizations/123/members/456');
-        expect(res.body).to.eql({admin: 'false'});
+        expect(res.body.url).to.equal('/organizations/123/members/456');
+        expect(res.body.body).to.eql({admin: 'false'});
       });
     });
     
     it('removes a member from an organization', function () {
       return divshot.organizations.id('123').members.id('456').remove().then(function (res) {
-        expect(res.url).to.equal('/organizations/123/members/456');
-        expect(res.method).to.equal('DELETE');
+        expect(res.body.url).to.equal('/organizations/123/members/456');
+        expect(res.body.method).to.equal('DELETE');
       });
     });
 

@@ -19,13 +19,13 @@ describe('releases', function () {
   
   it('provides a releases endpoint', function () {
     return divshot.releases.list().then(function (res) {
-      expect(res.url).to.equal('/releases');
+      expect(res.body.url).to.equal('/releases');
     });
   });
   
   it('looks up a release by hostname', function () {
     return divshot.releases.lookup('test.com').then(function (res) {
-      expect(res.url).to.equal('/releases/lookup?host=test.com');
+      expect(res.body.url).to.equal('/releases/lookup?host=test.com');
     });
   });
   

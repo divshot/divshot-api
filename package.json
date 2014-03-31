@@ -4,14 +4,11 @@
   "description": "Wrapper for the Divshot api",
   "main": "lib/divshot.js",
   "scripts": {
-    
     "test": "npm run lint && mocha test/ --recursive --reporter spec",
     "lint": "jshint lib/",
-    
     "build": "npm test && npm run build-standalone && npm run build-angular",
     "build-angular": "build/angular.js",
     "build-standalone": "build/standalone.js"
-    
   },
   "repository": {
     "type": "git",
@@ -30,7 +27,8 @@
     "jshint": "^2.4.4",
     "ngmin": "^0.4.1",
     "browserify": "^3.33.0",
-    "minify": "^0.2.6"
+    "minify": "^0.2.6",
+    "btoa": "^1.1.1"
   },
   "dependencies": {
     "rapper": "0.7.x",

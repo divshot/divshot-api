@@ -28,6 +28,11 @@ describe('divshot api wrapper set up', function (t) {
     expect(divshot.header('Authorization')).to.equal('Session client_id');
     expect(divshot.clientId()).to.equal('client_id');
   });
+  
+  it('sets the client id by itself', function () {
+    divshot.clientId(123);
+    expect(divshot.clientId()).to.equal(123);
+  });
     
   it('forces CORS with credentials if session is set', function () {
     divshot.session('client_id');

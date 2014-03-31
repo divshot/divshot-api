@@ -17,17 +17,15 @@ describe('releases', function () {
     server.stop(done);
   });
   
-  it('provides a releases endpoint', function (done) {
-    divshot.releases.list().then(function (res) {
+  it('provides a releases endpoint', function () {
+    return divshot.releases.list().then(function (res) {
       expect(res.url).to.equal('/releases');
-      done();
     });
   });
   
-  it('looks up a release by hostname', function (done) {
-    divshot.releases.lookup('test.com').then(function (res) {
+  it('looks up a release by hostname', function () {
+    return divshot.releases.lookup('test.com').then(function (res) {
       expect(res.url).to.equal('/releases/lookup?host=test.com');
-      done();
     });
   });
   

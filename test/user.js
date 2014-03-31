@@ -2,6 +2,7 @@ var Divshot = require('../lib/divshot');
 var Mocksy = require('mocksy');
 var server = new Mocksy({port: 9999});
 var expect = require('expect.js');
+var btoa = require('btoa');
 
 describe('user', function () {
   
@@ -18,8 +19,24 @@ describe('user', function () {
   });
   
   it('deletes a user account');
-  it('sets a user as welcomed');
-  it('generates an authentication ticket');
+  
+  it('sets a user as welcomed', function () {
+    return divshot.user.welcomed().then(function (res) {
+      expect(res.url).to.equal('/self/welcomed');
+      expect(res.method).to.equal('PUT');
+    });
+  });
+  
+  it('generates an authentication ticket', function () {
+    divshot.clientId(123);
+    
+    return divshot.user.generateTicket().then(function (res) {
+      expect(res.url).to.equal('/token/tickets');
+      expect(res.method).to.equal('POST');
+      expect(res.headers.authorization).to.equal('Basic ' + btoa(123));
+    });
+  });
+  
   it('checks the status of an authentication ticket');
   
   
@@ -45,84 +62,74 @@ describe('user', function () {
   }
    */
   
-  it('authenticates a user with a token', function (done) {
+  it('authenticates a user with a token', function () {
     divshot.credentials('username', 'password');
     
-    divshot.user.tokenAuth().then(function (token) {
+    return divshot.user.tokenAuth().then(function (token) {
       expect(token).to.not.be.ok();
-      done();
     });
   });
   
-  it('returns the token if user is authenticated', function (done) {
+  it('returns the token if user is authenticated', function () {
     divshot.token('token');
-    divshot.user.tokenAuth().then(function (token) {
+    return divshot.user.tokenAuth().then(function (token) {
       expect(token).to.equal('token');
-      done();
     });
   });
   
-  it('returns nothing if the session is set', function (done) {
+  it('returns nothing if the session is set', function () {
     divshot.session('client_id');
-    divshot.user.tokenAuth().then(function (token) {
+    return divshot.user.tokenAuth().then(function (token) {
       expect(token).to.not.be.ok();
-      done();
     });
   });
   
-  it('makes request to get current user data', function (done) {
-    divshot.user.self().then(function (user) {
+  it('makes request to get current user data', function () {
+    return divshot.user.self().then(function (user) {
       expect(user.url).to.equal('/self');
       expect(user.method).to.equal('GET');
-      done();
     });
   });
   
-  it('creates a user endpoint by id', function (done) {
+  it('creates a user endpoint by id', function () {
     var user = divshot.user.id(123);
-    user.get().then(function (res) {
+    return user.get().then(function (res) {
       expect(res.url).to.equal('/users/123');
-      done();
     });
   });
   
-  it('resets the user password', function (done) {
-    divshot.user.id(123).password.reset().then(function (res) {
+  it('resets the user password', function () {
+    return divshot.user.id(123).password.reset().then(function (res) {
       expect(res.url).to.equal('/actions/reset_password/123');
       expect(res.method).to.equal('POST');
-      done();
     });
   });
   
-  describe('emails', function (done) {
+  describe('emails', function () {
     
-    it('adds an email to the user', function (done) {
-      divshot.user.id(123).emails.add('email@email.com').then(function (res) {
+    it('adds an email to the user', function () {
+      return divshot.user.id(123).emails.add('email@email.com').then(function (res) {
         expect(res.body).to.eql({address: 'email@email.com'});
-        done();
       });
     });
     
-    it('sets the primary email for a user', function (done) {
-      divshot.user.id(123).emails.add('email@email.com', true).then(function (res) {
+    it('sets the primary email for a user', function () {
+      return divshot.user.id(123).emails.add('email@email.com', true).then(function (res) {
         expect(res.body).to.eql({address: 'email@email.com', primary: "true"});
-        done();
       });
     });
     
-    it('removes a user email', function (done) {
-      divshot.user.id(123).emails.remove('email@email.com').then(function (res) {
+    it('removes a user email', function () {
+      return divshot.user.id(123).emails.remove('email@email.com').then(function (res) {
         expect(res.url).to.equal('/self/emails/email@email.com');
         expect(res.method).to.equal('DELETE');
-        done();
       });
     });
     
-    it('resends an invite to the user', function (done) {
-      divshot.user.id(123).emails.resend('email@email.com').then(function (res) {
+    it('resends an invite to the user', function () {
+      return divshot.user.id(123).emails.resend('email@email.com').then(function (res) {
         expect(res.url).to.equal('/self/emails/email@email.com/resend');
         expect(res.method).to.equal('POST');
-        done();
       });
     });
     

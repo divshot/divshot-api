@@ -3,7 +3,7 @@ var Mocksy = require('mocksy');
 var server = new Mocksy({port: 9999});
 var expect = require('expect.js');
 
-describe('organizations', function (done) {
+describe('organizations', function () {
   
   var divshot;
   
@@ -17,60 +17,54 @@ describe('organizations', function (done) {
     server.stop(done);
   });
   
-  describe('RESTful organizations', function (done) {
+  describe('RESTful organizations', function () {
     
-    it('list the organizations', function (done) {
-      divshot.organizations.list().then(function (res) {
+    it('list the organizations', function () {
+      return divshot.organizations.list().then(function (res) {
         expect(res.url).to.equal('/organizations');
-        done();
       });
     });
     
-    it('gets a single organization', function (done) {
-      divshot.organizations.id('123').get().then(function (res) {
+    it('gets a single organization', function () {
+      return divshot.organizations.id('123').get().then(function (res) {
         expect(res.url).to.equal('/organizations/123');
-        done();
       });
     });
     
-    it('create an organization', function (done) {
-      divshot.organizations.create({
+    it('create an organization', function () {
+      return divshot.organizations.create({
         name: 'name',
       }).then(function (res) {
         expect(res.body).to.eql({name: 'name'});
-        done();
       });
     });
     
-    it('updates an organization', function (done) {
-      divshot.organizations.id('123').update({
+    it('updates an organization', function () {
+      return divshot.organizations.id('123').update({
         name: 'name',
       }).then(function (res) {
         expect(res.body).to.eql({name: 'name'});
-        done();
       });
     });
     
   });
   
-  it('lists apps for an organization', function (done) {
-    divshot.organizations.id('123').apps.list().then(function (res) {
+  it('lists apps for an organization', function () {
+    return divshot.organizations.id('123').apps.list().then(function (res) {
       expect(res.url).to.equal('/organizations/123/apps');
-      done();
     });
   });
   
-  describe('members', function (done) {
+  describe('members', function () {
     
-    it('gets organization member list', function (done) {
-      divshot.organizations.id('123').members.list().then(function (res) {
+    it('gets organization member list', function () {
+      return divshot.organizations.id('123').members.list().then(function (res) {
         expect(res.url).to.equal('/organizations/123/members');
-        done();
       });
     });
     
-    it('invites members to an organization', function (done) {
-      divshot.organizations.id('123').members.create({
+    it('invites members to an organization', function () {
+      return divshot.organizations.id('123').members.create({
         name: 'email',
         email: 'email'
       }).then(function (res) {
@@ -78,25 +72,22 @@ describe('organizations', function (done) {
           name: 'email',
           email: 'email'
         });
-        done();
       });
     });
 
-    it('sets the member priveleges on an organization', function (done) {
-      divshot.organizations.id('123').members.id('456').update({
+    it('sets the member priveleges on an organization', function () {
+      return divshot.organizations.id('123').members.id('456').update({
         admin: false // or true
       }).then(function (res) {
         expect(res.url).to.equal('/organizations/123/members/456');
         expect(res.body).to.eql({admin: 'false'});
-        done();
       });
     });
     
-    it('removes a member from an organization', function (done) {
-      divshot.organizations.id('123').members.id('456').remove().then(function (res) {
+    it('removes a member from an organization', function () {
+      return divshot.organizations.id('123').members.id('456').remove().then(function (res) {
         expect(res.url).to.equal('/organizations/123/members/456');
         expect(res.method).to.equal('DELETE');
-        done();
       });
     });
 

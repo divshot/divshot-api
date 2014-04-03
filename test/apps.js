@@ -137,6 +137,12 @@ describe('apps', function () {
 
   });
 
+  describe('subscriptions', function () {
+    
+    it('updates the card on an app subscription');
+    
+  });
+
   it('gets all apps owned by an organization', function () {
     return divshot.apps.organization('123').then(function (res) {
       expect(res.body.url).to.equal('/organizations/123/apps');

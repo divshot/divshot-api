@@ -37,7 +37,7 @@ describe('divshot api wrapper set up', function (t) {
     
   it('forces CORS with credentials if session is set', function () {
     divshot.session('client_id');
-    expect(divshot.xhr('withCredentials')).to.be.ok();
+    expect(divshot.xhrOption('withCredentials')).to.be.ok();
   });
   
   it('credentials', function () {

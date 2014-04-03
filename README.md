@@ -16,6 +16,7 @@ Wrapper for the Divshot API.
   * [Releases](#releases)
   * [Domains](#domains)
   * [Environment Configuration](#app-environment-configuration)
+  * [Subscription]()
 
 ## Install
 
@@ -398,6 +399,16 @@ app.domains.remove('www.domain.com').then(function (response) {
   
 });
 
+```
+
+### Subscription
+
+Update data associated with an App's subscription
+
+```js
+app.subscription.update('card number').then(function (res) {
+  
+});
 ```
 
 ###App Environment Configuration

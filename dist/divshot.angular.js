@@ -158,8 +158,6 @@ module.exports = function (api, divshot) {
       app.env = function (env) {
         return app.endpoint('env').one(env, {
           
-          // TODO: make this "protect" for a short hand??
-          
           config: function (configData, callback) {
             var url = this.url() + '/config';
             
@@ -172,6 +170,18 @@ module.exports = function (api, divshot) {
             });
           }
         });
+      };
+      
+      app.subscription = {
+        updateCard: function (card, callback) {
+          var url = app.url() + '/subscription/card';
+          
+          return app.http.request(url, 'PUT', {
+            form: {
+              card: card
+            }
+          }, callback);
+        }
       };
       
       return app;
@@ -5949,6 +5959,7 @@ Http.prototype.request = function (path, method, options, callback) {
   extend(httpOptions, {
     headers: this.options.headers
   }, options);
+  
   extend(httpRequest, httpOptions, {
     path: path,
     method: method

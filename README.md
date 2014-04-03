@@ -16,7 +16,7 @@ Wrapper for the Divshot API.
   * [Releases](#releases)
   * [Domains](#domains)
   * [Environment Configuration](#app-environment-configuration)
-  * [Subscription]()
+  * [Subscription](#subscription)
 
 ## Install
 

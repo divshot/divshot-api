@@ -68,7 +68,8 @@ describe('apps', function () {
         name: 'name'
       }).then(function (res) {
         expect(res.body.url).to.equal('/apps/123/env/production/config');
-        expect(res.body.body).to.eql({name: 'name'});
+        console.log(res.body.body)
+        expect(res.body.body).to.eql({'config[name]': 'name'});
         expect(res.body.method).to.equal('PUT', 'method');
       });
     });

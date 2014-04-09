@@ -560,6 +560,12 @@ module.exports = function (api, divshot, credentials) {
       return this.http.request(this.options.host + '/self', 'GET', callback);
     },
     
+    deleteAccount: function (email, callback) {
+      return this.http.request(this.options.host + '/self', 'DELETE', {
+        email: email
+      }, callback);
+    },
+    
     generateTicket: function (callback) {
       return this.http._http(this.options.host + '/token/tickets', 'POST', {
         headers: {

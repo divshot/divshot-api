@@ -198,6 +198,11 @@ api.user.setWelcomed().then(function () {
 
 });
 
+// Delete account
+api.user.deleteAcccount(user@email.com).then(function () {
+  
+});
+
 ```
 
 #### User password
@@ -372,6 +377,11 @@ app.releases.env('production').get(function (err, release) {
 });
 
 app.releases.env('production').rollback(function (err, response) {
+  
+});
+
+// Rollback to specific version
+app.releases.env('production').rollbackTo('v12').then(function () {
   
 });
 

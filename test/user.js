@@ -80,6 +80,8 @@ describe('user', function () {
     });
   });
   
+  it('removes a users account');
+  
   it('creates a user endpoint by id', function () {
     var user = divshot.user.id(123);
     return user.get().then(function (res) {

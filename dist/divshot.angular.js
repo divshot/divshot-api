@@ -564,7 +564,11 @@ module.exports = function (api, divshot, credentials) {
       return this.http.request(this.options.host + '/self', 'DELETE', {
         form: {
           email: email
-        }
+        },
+        headers: {
+          Authorization: 'Session ' + this.credentials.client_id,
+          'content-type': 'application/json'
+        },
       }, callback);
     },
     

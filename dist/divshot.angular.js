@@ -562,7 +562,9 @@ module.exports = function (api, divshot, credentials) {
     
     deleteAccount: function (email, callback) {
       return this.http.request(this.options.host + '/self', 'DELETE', {
-        email: email
+        form: {
+          email: email
+        }
       }, callback);
     },
     

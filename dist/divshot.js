@@ -544,7 +544,7 @@ module.exports = function (api, divshot, credentials) {
     },
     
     sendHelpRequest: function (subject, body, callback) {
-      return this.http.request(this.options.host + '/self', 'POST', {
+      return this.http.request(this.options.host + '/self/help', 'POST', {
         form: {
           subject: subject,
           body: body

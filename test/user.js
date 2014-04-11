@@ -19,6 +19,7 @@ describe('user', function () {
   });
   
   it('deletes a user account');
+  it('sends a help request to the api');
   
   it('sets a user as welcomed', function () {
     return divshot.user.welcomed().then(function (res) {
@@ -79,8 +80,6 @@ describe('user', function () {
       expect(res.body.method).to.equal('GET');
     });
   });
-  
-  it('removes a users account');
   
   it('creates a user endpoint by id', function () {
     var user = divshot.user.id(123);

@@ -184,6 +184,10 @@ module.exports = function (api, divshot) {
         }
       };
       
+      app.stats = function (done) {
+        return app.endpoint('stats').list(done);
+      };
+      
       return app;
     },
     

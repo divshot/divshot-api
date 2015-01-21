@@ -17,6 +17,7 @@ Wrapper for the Divshot API.
   * [Domains](#domains)
   * [Environment Configuration](#app-environment-configuration)
   * [Subscription](#subscription)
+  * [Webhooks](#webhooks)
 
 ## Install
 
@@ -418,6 +419,32 @@ Update data associated with an App's subscription
 ```js
 app.subscription.update('card number').then(function (res) {
   
+});
+```
+
+### Webhooks
+
+Manipulate webhooks associated with your app
+
+```js
+app.webhooks.list().then(function (response) {
+
+});
+
+app.webhooks.create({url: 'some-url.com', active: true}).then(function () {
+
+});
+
+app.webhooks.resume(hook).then(function () {
+
+});
+
+app.webhooks.pause(hook).then(function () {
+
+});
+
+app.webhooks.remove(hookId).then(function () {
+
 });
 ```
 

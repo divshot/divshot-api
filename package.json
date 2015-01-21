@@ -1,6 +1,6 @@
 {
   "name": "divshot-api",
-  "version": "0.8.1",
+  "version": "1.0.0",
   "description": "Wrapper for the Divshot api",
   "main": "lib/Divshot.js",
   "scripts": {
@@ -17,24 +17,25 @@
     "url": "https://github.com/divshot/divshot-api/issues"
   },
   "devDependencies": {
-    "cli-easy": "0.1.0",
-    "vows": "0.6.1",
-    "grunt": "~0.4.4",
+    "browserify": "^8.1.1",
     "chai": "~1.8.0",
+    "grunt": "~0.4.4",
+    "grunt-browserify": "^3.3.0",
+    "grunt-contrib-uglify": "^0.7.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "mocksy": "^1.0.0",
     "proxyquire": "~0.5.1",
-    "sinon": "~1.7.3",
-    "mocksy": "~0.1.4",
-    "grunt-contrib-uglify": "~0.2.5",
-    "browserify": "~2.35.1",
-    "grunt-browserify": "~1.2.11",
-    "grunt-contrib-watch": "~0.5.3"
+    "sinon": "~1.7.3"
   },
   "dependencies": {
-    "lodash.defaults": "~2.2.1",
-    "form-data": "~0.1.2",
-    "async": "~0.2.9",
-    "narrator": "0.6.x",
-    "promise": "~4.0.0",
-    "btoa": "1.1.x"
+    "amp-extend": "^1.0.1",
+    "async": "^0.9.0",
+    "btoa": "1.1.x",
+    "form-data": "^0.2.0",
+    "lodash.defaults": "^2.4.1",
+    "narrator": "~1.0.0",
+    "promise": "^6.1.0",
+    "re-emitter": "^1.0.0",
+    "tiny-emitter": "^1.0.0"
   }
 }

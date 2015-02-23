@@ -180,6 +180,11 @@ module.exports = function (api, divshot) {
             }, function (err, response, body) {
               callback(err, response);
             });
+          },
+          
+          purgeCache: function (done) {
+            
+            return this.http.request(this.url() + '/cache', 'DELETE', done);
           }
         });
       };
@@ -210,6 +215,11 @@ module.exports = function (api, divshot) {
       
       app.stats = function (done) {
         return app.endpoint('stats').list(done);
+      };
+      
+      app.purgeCache = function (done) {
+        
+        return this.http.request(this.url() + '/cache', 'DELETE', done);
       };
       
       return app;
